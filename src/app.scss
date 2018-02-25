@@ -1,0 +1,10 @@
+@tailwind preflight;
+@tailwind utilities;
+
+html {
+  @apply .h-full;
+}
+
+body {
+  @apply .text-grey-darkest;
+}
