@@ -7,8 +7,10 @@
 <script>
     export default {
         name: "welcome",
-        mounted(){
-            window.setTimeout(()=>{this.$router.push('/player-order')},2000);
+        mounted() {
+            window.setTimeout(() => {
+                Bus.$emit('restart');
+            }, 2000);
         }
     }
 </script>

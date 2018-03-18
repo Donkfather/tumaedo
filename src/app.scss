@@ -1,6 +1,8 @@
 @tailwind preflight;
 @tailwind utilities;
 
+@import '~font-awesome/scss/font-awesome.scss';
+
 html {
   @apply .h-full;
 }
@@ -8,7 +10,23 @@ html {
 body {
   @apply .text-grey-darkest;
 }
+/*
+* Components
+*/
+.btn {
+  @apply .font-bold .py-3 .px-4 .rounded;
+}
 
+.btn-peacock {
+  @apply .bg-peacock .text-white;
+}
+.btn-peacock:hover {
+  @apply .bg-peacock-dark;
+}
+
+/*
+* Transitions
+*/
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s ease;
 }
