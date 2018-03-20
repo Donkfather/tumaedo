@@ -141,6 +141,7 @@ const mutations = {
     },
     restartApp(state) {
         console.log('restarting app...');
+
         state.game.players = [];
         state.game.myCards = {
             characters: [],
@@ -151,20 +152,7 @@ const mutations = {
         state.game.currentPlayer = null;
         state.game.questions = [];
         state.gameStarted = false;
-        /*
-        state.game = {
-            players: [],
-            myCards: {
-                characters: [],
-                weapons: [],
-                places: [],
-            },
-            firstPlayer: null,
-            currentPlayer: null,
-            questions: []
-        };
-        gameStarted = false;
-        */
+
         console.log('app restarted');
     },
     startGame(state) {

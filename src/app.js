@@ -11,7 +11,9 @@ import PlayerOrder from './pages/player-order'
 import SelectCards from './pages/select-cards'
 import FirstPlayer from './pages/first-player'
 import Question from './pages/question'
-import Answer from './pages/question'
+import Notebook from './components/notebook'
+import {mapState} from 'vuex';
+import store from './Vuex';
 
 Vue.component('app-layout', require('./components/App'))
 Vue.component('list', require('./components/ListSimple'))
@@ -20,21 +22,26 @@ Vue.component('v-button', require('./components/button'))
 
 const routes = [
     {path: '/', component: Welcome},
-    {path: '/player-order', component: PlayerOrder},
-    {path: '/select-cards', component: SelectCards},
-    {path: '/first-player', component: FirstPlayer},
-    {path: '/question', component: Question},
-    {path: '/answer', component: Answer},
+    {path: '/player-order', component: PlayerOrder, name: 'player-order'},
+    {path: '/select-cards', component: SelectCards, name: 'select-cards'},
+    {path: '/first-player', component: FirstPlayer, name: 'first-player'},
+    {path: '/question',component: Question, name: 'question'},
+    {path: '/notebook',component: Notebook, name: 'notebook'},
     {path: '*', component: {template: `<h1>Not Found!</h1>`}},
-]
+];
 
 const router = new VueRouter({
     routes,
     // mode: 'history',
 })
-
-import {mapState} from 'vuex';
-import store from './Vuex';
+router.beforeEach((to, from, next) => {
+    console.log(to,from);
+    console.log(store.state);
+    if(to.name === 'select-cards' && !store.state.game.players.length > 0){
+        next('player-order');
+    }
+    next()
+})
 
 const App = new Vue({
     el: "#app",

@@ -9,7 +9,7 @@
                     {{item.name}}
                 </div>
                 <div v-show="selected.includes(item)">
-                    <span v-if="multiple" class="px-3 py-1 rounded-full bg-grey-darkest">
+                    <span v-if="multiple && numberedSelect" class="px-3 py-1 rounded-full bg-grey-darkest">
                             {{selected.indexOf(item) + 1}}
                     </span>
                     <span v-else>
@@ -37,6 +37,10 @@
             multiple: {
                 type: Boolean,
                 default: false
+            },
+            numberedSelect: {
+                type: Boolean,
+                default: true
             }
         },
         mounted() {

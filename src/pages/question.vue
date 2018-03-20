@@ -163,6 +163,11 @@
                 }
             }
         },
+        beforeCreate(){
+          if(! this.$store.state.gameStarted){
+              Bus.$emit('restart');
+          }
+        },
         computed: {
             questionCards() {
                 const cards = [];

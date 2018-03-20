@@ -10,7 +10,7 @@
                         <div v-if="preSelected.includes(item)"
                               class="text-5xl text-white"
                         >
-                            <div v-if="multiple">
+                            <div v-if="multiple && numberedSelect">
                                 {{preSelected.indexOf(item)+1}}
                             </div>
                             <div v-else>
@@ -44,6 +44,10 @@
             multiple: {
                 type: Boolean,
                 default: false
+            },
+            numberedSelect: {
+                type: Boolean,
+                default: true
             }
         },
         beforeMount() {
