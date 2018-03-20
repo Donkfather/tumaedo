@@ -7647,17 +7647,14 @@ body {
   color: #3d4852;
 }
 
-table.notebook {
+.table.notebook {
   border-spacing: 0;
 }
 
-table.notebook tr {
-  min-height: 50px;
-}
-
-table.notebook th,
-table.notebook td {
+.table.notebook .table-cell {
   border: 1px solid rgba(31, 157, 85, .2);
+  height: 55px;
+  vertical-align: middle;
 }
 
 /*

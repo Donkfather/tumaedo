@@ -11,14 +11,12 @@ body {
   @apply .text-grey-darkest;
 }
 
-table.notebook {
+.table.notebook {
   border-spacing: 0;
-  tr {
-    min-height: 50px;
-  }
-  th, td {
+  .table-cell {
     border: 1px solid rgba(31,157,85,0.2);
-    //@apply border-green-dark;
+    height: 55px;
+    vertical-align: middle;
   }
 }
 

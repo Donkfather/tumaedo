@@ -37433,23 +37433,27 @@ var render = function() {
       _vm._v(" "),
       _c("div", [
         _c(
-          "table",
-          { staticClass: "w-full notebook" },
+          "div",
+          { staticClass: "table w-full notebook" },
           _vm._l(_vm.players, function(player) {
-            return _c("tr", { staticClass: "w-full text-left" }, [
-              _c("th", {
-                staticClass: "w-2/5 pl-3 p-2",
-                domProps: { textContent: _vm._s(player) }
-              }),
-              _vm._v(" "),
-              _vm._m(2, true),
-              _vm._v(" "),
-              _vm._m(3, true),
-              _vm._v(" "),
-              _vm._m(4, true),
-              _vm._v(" "),
-              _vm._m(5, true)
-            ])
+            return _c(
+              "div",
+              { staticClass: "table-row w-full text-left font-bold" },
+              [
+                _c("div", {
+                  staticClass: "table-cell w-2/5 pl-3 p-2",
+                  domProps: { textContent: _vm._s(player) }
+                }),
+                _vm._v(" "),
+                _vm._m(2, true),
+                _vm._v(" "),
+                _vm._m(3, true),
+                _vm._v(" "),
+                _vm._m(4, true),
+                _vm._v(" "),
+                _vm._m(5, true)
+              ]
+            )
           })
         )
       ])
@@ -37491,13 +37495,60 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-center text-xl" }, [
-      _c("div", [
-        _c("div", { staticClass: "text-scarlet" }, [
-          _vm._v(
-            "\n                                ✗\n                            "
-          )
-        ]),
+    return _c("div", { staticClass: "table-cell text-center text-xl" }, [
+      _c("div", { staticClass: "flex flex-col h-full" }, [
+        _c(
+          "div",
+          {
+            staticClass:
+              "flex-1 text-scarlet flex justify-center items-center text-3xl"
+          },
+          [
+            _vm._v(
+              "\n                                ✗\n                            "
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass: "numbers flex justify-around w-full",
+            staticStyle: { "font-size": "9px" }
+          },
+          [
+            _c("div", [_vm._v("1")]),
+            _vm._v(" "),
+            _c("div", [_vm._v("2")]),
+            _vm._v(" "),
+            _c("div", [_vm._v("3")]),
+            _vm._v(" "),
+            _c("div", [_vm._v("4")]),
+            _vm._v(" "),
+            _c("div", [_vm._v("5")])
+          ]
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "table-cell text-center text-xl" }, [
+      _c("div", { staticClass: "flex flex-col h-full" }, [
+        _c(
+          "div",
+          {
+            staticClass:
+              "text-green flex-1 flex justify-center items-center text-3xl"
+          },
+          [
+            _vm._v(
+              "\n                                ✓\n                            "
+            )
+          ]
+        ),
         _vm._v(" "),
         _c(
           "div",
@@ -37524,13 +37575,20 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-center text-xl" }, [
-      _c("div", [
-        _c("div", { staticClass: "text-green" }, [
-          _vm._v(
-            "\n                                ✓\n                            "
-          )
-        ]),
+    return _c("div", { staticClass: "table-cell text-center text-xl" }, [
+      _c("div", { staticClass: "flex flex-col h-full" }, [
+        _c(
+          "div",
+          {
+            staticClass:
+              "flex-1 text-scarlet flex justify-center items-center text-3xl"
+          },
+          [
+            _vm._v(
+              "\n                                ✗\n                            "
+            )
+          ]
+        ),
         _vm._v(" "),
         _c(
           "div",
@@ -37557,46 +37615,20 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-center text-xl" }, [
-      _c("div", [
-        _c("div", { staticClass: "text-scarlet" }, [
-          _vm._v(
-            "\n                                ✗\n                            "
-          )
-        ]),
-        _vm._v(" "),
+    return _c("div", { staticClass: "table-cell text-center text-xl" }, [
+      _c("div", { staticClass: "flex flex-col h-full" }, [
         _c(
           "div",
           {
-            staticClass: "flex text-xs w-full",
-            staticStyle: { "font-size": "9px" }
+            staticClass:
+              "text-green flex-1 flex justify-center items-center text-3xl"
           },
           [
-            _c("div", { staticClass: "flex-1" }, [_vm._v("1")]),
-            _vm._v(" "),
-            _c("div", { staticClass: "flex-1" }, [_vm._v("2")]),
-            _vm._v(" "),
-            _c("div", { staticClass: "flex-1" }, [_vm._v("3")]),
-            _vm._v(" "),
-            _c("div", { staticClass: "flex-1" }, [_vm._v("4")]),
-            _vm._v(" "),
-            _c("div", { staticClass: "flex-1" }, [_vm._v("5")])
+            _vm._v(
+              "\n                                ✓\n                            "
+            )
           ]
-        )
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-center text-xl" }, [
-      _c("div", [
-        _c("div", { staticClass: "text-green" }, [
-          _vm._v(
-            "\n                                ✓\n                            "
-          )
-        ]),
+        ),
         _vm._v(" "),
         _c(
           "div",

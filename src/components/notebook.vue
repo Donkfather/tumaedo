@@ -9,26 +9,26 @@
                 <h2 class="text-xl uppercase text-bold text-mustard-lightest tracking-wide">Suspects</h2>
             </div>
             <div>
-                <table class="w-full notebook">
-                    <tr class="w-full text-left" v-for="player in players">
-                        <th class="w-2/5 pl-3 p-2" v-text="player"></th>
-                        <td class="text-center text-xl">
-                            <div>
-                                <div class="text-scarlet">
+                <div class="table w-full notebook">
+                    <div class="table-row w-full text-left font-bold" v-for="player in players">
+                        <div class="table-cell w-2/5 pl-3 p-2" v-text="player"></div>
+                        <div class="table-cell text-center text-xl">
+                            <div class="flex flex-col h-full">
+                                <div class="flex-1 text-scarlet flex justify-center items-center text-3xl">
                                     &cross;
                                 </div>
-                                <div class="flex text-xs w-full" style="font-size: 9px;">
-                                    <div class="flex-1">1</div>
-                                    <div class="flex-1">2</div>
-                                    <div class="flex-1">3</div>
-                                    <div class="flex-1">4</div>
-                                    <div class="flex-1">5</div>
+                                <div class="numbers flex justify-around w-full" style="font-size: 9px;">
+                                    <div>1</div>
+                                    <div>2</div>
+                                    <div>3</div>
+                                    <div>4</div>
+                                    <div>5</div>
                                 </div>
                             </div>
-                        </td>
-                        <td class="text-center text-xl">
-                            <div>
-                                <div class="text-green">
+                        </div>
+                        <div class="table-cell text-center text-xl">
+                            <div class="flex flex-col h-full">
+                                <div class="text-green flex-1 flex justify-center items-center text-3xl">
                                     &check;
                                 </div>
                                 <div class="flex text-xs w-full" style="font-size: 9px;">
@@ -39,10 +39,10 @@
                                     <div class="flex-1">5</div>
                                 </div>
                             </div>
-                        </td>
-                        <td class="text-center text-xl">
-                            <div>
-                                <div class="text-scarlet">
+                        </div>
+                        <div class="table-cell text-center text-xl">
+                            <div class="flex flex-col h-full">
+                                <div class="flex-1 text-scarlet flex justify-center items-center text-3xl">
                                     &cross;
                                 </div>
                                 <div class="flex text-xs w-full" style="font-size: 9px;">
@@ -53,10 +53,10 @@
                                     <div class="flex-1">5</div>
                                 </div>
                             </div>
-                        </td>
-                        <td class="text-center text-xl">
-                            <div>
-                                <div class="text-green">
+                        </div>
+                        <div class="table-cell text-center text-xl">
+                            <div class="flex flex-col h-full">
+                                <div class="text-green flex-1 flex justify-center items-center text-3xl">
                                     &check;
                                 </div>
                                 <div class="flex text-xs w-full" style="font-size: 9px;">
@@ -67,9 +67,9 @@
                                     <div class="flex-1">5</div>
                                 </div>
                             </div>
-                        </td>
-                    </tr>
-                </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
