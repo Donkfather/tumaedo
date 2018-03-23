@@ -20,6 +20,10 @@ body {
   }
 }
 
+.select {
+  @apply block text-grey-darker appearance-none w-full bg-grey-lighter text-xl border border-grey-dark py-3 px-4 pr-8 rounded;
+}
+
 
 /*
 * Components

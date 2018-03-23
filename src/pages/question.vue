@@ -7,22 +7,23 @@
         </div>
 
         <div slot="content">
-            About what did {{getCurrentPlayer().name}} asked ?
-
-            <div class="flex justify-between mb-6 -mx-2">
-                <div class="relative flex-1 px-2">
+            <div class="text-2xl mb-6">
+                About what did {{getCurrentPlayer().name}} asked ?
+            </div>
+            <div class="justify-between flex flex-col sm:flex-row mb-6 -mx-2">
+                <div class="relative md:w-1/3 sm:w-full px-2 mb-4 sm:mb-0">
                     <select name="character" id="character" v-model="question.character"
-                            class="block text-grey-lightest appearance-none w-full bg-grey-dark border border-grey-darker text-grey-darker py-3 px-4 pr-8 rounded"
+                            class="select"
                     >
                         <option
                                 value=""
+                                disabled
                                 class="py-6"
                         >
-                            --
+                            Suspect
                         </option>
                         <option
                                 :value="character"
-                                class="py-6"
                                 v-for="character in characters"
                         >
                             {{character.name}}
@@ -34,19 +35,19 @@
                         </svg>
                     </div>
                 </div>
-                <div class="relative flex-1 px-2">
+                <div class="relative md:w-1/3 sm:w-full px-2  mb-4 sm:mb-0">
                     <select name="weapon" id="weapon" v-model="question.weapon"
-                            class="block text-grey-lightest appearance-none w-full bg-grey-dark border border-grey-darker text-grey-darker py-3 px-4 pr-8 rounded"
+                            class="select"
                     >
                         <option
                                 value=""
+                                disabled
                                 class="py-6"
                         >
-                            --
+                            Weapon
                         </option>
                         <option
                                 :value="weapon"
-                                class="py-6"
                                 v-for="weapon in weapons"
                         >
                             {{weapon.name}}
@@ -58,19 +59,19 @@
                         </svg>
                     </div>
                 </div>
-                <div class="relative flex-1 px-2">
+                <div class="relative md:w-1/3 sm:w-full px-2  mb-4 sm:mb-0">
                     <select name="place" id="place" v-model="question.place"
-                            class="block text-grey-lightest appearance-none w-full bg-grey-dark border border-grey-darker text-grey-darker py-3 px-4 pr-8 rounded"
+                            class="select"
                     >
                         <option
                                 value=""
+                                disabled
                                 class="py-6"
                         >
-                            --
+                            Place
                         </option>
                         <option
                                 :value="place"
-                                class="py-6"
                                 v-for="place in places"
                         >
                             {{place.name}}
@@ -88,14 +89,14 @@
                 And who answered?
                 <div class="relative">
                     <select name="answered-who" id="answered-who" v-model="question.who"
-                            class="block text-grey-lightest appearance-none w-full bg-grey-darker border border-grey-darker text-grey-darker py-3 px-4 pr-8 rounded"
+                            class="select"
                     >
 
                         <option
                                 value=""
                                 class="py-6"
                         >
-                            --
+                            Character
                         </option>
                         <option
                                 :value="player"
@@ -117,7 +118,7 @@
                 With what ?
                 <div class="relative">
                     <select name="character" id="answered-card" v-model="question.what"
-                            class="block text-grey-lightest appearance-none w-full bg-grey-darker border border-grey-darker text-grey-darker py-3 px-4 pr-8 rounded"
+                            class="select"
                     >
                         <option
                                 value=""
@@ -165,7 +166,7 @@
         },
         beforeCreate(){
           if(! this.$store.state.gameStarted){
-              Bus.$emit('restart');
+              // Bus.$emit('restart');
           }
         },
         computed: {

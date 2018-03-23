@@ -7657,6 +7657,25 @@ body {
   vertical-align: middle;
 }
 
+.select {
+  display: block;
+  color: #606f7b;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  width: 100%;
+  background-color: #f1f5f8;
+  font-size: 1.25rem;
+  border-width: 1px;
+  border-color: #8795a1;
+  padding-top: .75rem;
+  padding-bottom: .75rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-right: 2rem;
+  border-radius: .25rem;
+}
+
 /*
 * Components
 */

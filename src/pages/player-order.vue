@@ -7,7 +7,7 @@
             </p>
         </div>
         <div slot="content">
-            <list :data="characters" :pre-selected="selected" multiple @update="updatePlayers(selected)"></list>
+            <list :data="characters" :pre-selected="selected" multiple @update="updatePlayers"></list>
         </div>
         <div slot="buttons">
             <nav-buttons next-route="/select-cards"/>
@@ -28,7 +28,7 @@
             }),
         },
         methods: {
-            ...mapMutations(['updatePlayers'])
+            ...mapMutations(['updatePlayers']),
         }
 
     }

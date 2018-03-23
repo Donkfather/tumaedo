@@ -6,7 +6,8 @@ import Vuex from 'vuex';
 import VuexPersistence from 'vuex-persist';
 
 const vuexLocal = new VuexPersistence({
-    storage: window.localStorage
+    storage: window.localStorage,
+    asyncStorage: false
 })
 Vue.use(Vuex)
 const initialState = {
@@ -24,94 +25,94 @@ const initialState = {
     gameStarted: false,
     repositories: {
         characters: [
-            new Character({
+            {
                 id: 1,
                 name: "Scarlet",
-            }),
-            new Character({
+            },
+            {
                 id: 2,
                 name: "Peacock",
-            }),
-            new Character({
+            },
+            {
                 id: 3,
                 name: "Mustard",
-            }),
-            new Character({
+            },
+            {
                 id: 4,
                 name: "Plum",
-            }),
-            new Character({
+            },
+            {
                 id: 5,
                 name: "White",
-            }),
-            new Character({
+            },
+            {
                 id: 6,
                 name: "Green",
-            }),
+            },
         ],
         weapons: [
-            new Weapon({
+            {
                 id: 1,
                 name: "Dumbell",
-            }),
-            new Weapon({
+            },
+            {
                 id: 2,
                 name: "Pistol",
-            }),
-            new Weapon({
+            },
+            {
                 id: 3,
                 name: "Poison",
-            }),
-            new Weapon({
+            },
+            {
                 id: 4,
                 name: "Rope",
-            }),
-            new Weapon({
+            },
+            {
                 id: 5,
                 name: "Candlestick",
-            }),
-            new Weapon({
+            },
+            {
                 id: 6,
                 name: "Knife",
-            }),
-            new Weapon({
+            },
+            {
                 id: 7,
                 name: "Wrench",
-            }),
+            },
         ],
         places: [
-            new Place({
+            {
                 id: 1,
                 name: "Living Room",
-            }),
-            new Place({
+            },
+            {
                 id: 2,
                 name: "Guest House",
-            }),
-            new Place({
+            },
+            {
                 id: 3,
                 name: "Hall",
-            }),
-            new Place({
+            },
+            {
                 id: 4,
                 name: "Patio",
-            }),
-            new Place({
+            },
+            {
                 id: 5,
                 name: "Theater",
-            }),
-            new Place({
+            },
+            {
                 id: 6,
                 name: "Observatory",
-            }),
-            new Place({
+            },
+            {
                 id: 7,
                 name: "Spa",
-            }),
-            new Place({
+            },
+            {
                 id: 8,
                 name: "Kitchen",
-            }),
+            },
         ],
     },
 };
@@ -191,5 +192,5 @@ export default new Vuex.Store({
     mutations,
     actions,
     getters,
-    // plugins: [vuexLocal.plugin]
+    plugins: [vuexLocal.plugin]
 })

@@ -11,13 +11,13 @@
             <div>
                 <div class="table w-full notebook">
                     <div class="table-row w-full text-left font-bold" v-for="player in players">
-                        <div class="table-cell w-2/5 pl-3 p-2" v-text="player"></div>
+                        <div class="table-cell w-2/5 pl-3 p-2 select-none" v-text="player.name"></div>
                         <div class="table-cell text-center text-xl">
                             <div class="flex flex-col h-full">
-                                <div class="flex-1 text-scarlet flex justify-center items-center text-3xl">
+                                <div class="flex-1 text-scarlet flex justify-center items-center text-3xl select-none">
                                     &cross;
                                 </div>
-                                <div class="numbers flex justify-around w-full" style="font-size: 9px;">
+                                <div class="numbers flex justify-around w-full select-none" style="font-size: 9px;">
                                     <div>1</div>
                                     <div>2</div>
                                     <div>3</div>
@@ -79,15 +79,13 @@
         name: "notebook",
         data() {
             return {
-                players: [
-                    'Col. Mustard',
-                    'Prof. Plum',
-                    'Mr. Green',
-                    'Mrs. Peacock',
-                    'Miss Scarlet',
-                    'Mrs. White',
-                ]
+                players: []
             }
+        },
+        beforeMount(){
+          this.players.push(...this.$store.state.repositories.characters);
+          this.players.push(...this.$store.state.repositories.weapons);
+          this.players.push(...this.$store.state.repositories.places);
         }
     }
 </script>

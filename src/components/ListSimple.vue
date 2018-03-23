@@ -3,14 +3,14 @@
         <ul class="list-reset w-full">
             <li v-for="(item, index) in data" :key="index"
                 class="cursor-pointer p-4 w-full border-2 border-grey-lighter rounded mb-2 flex justify-between"
-                :class="{'bg-grey-dark text-white': selected.includes(item)}"
+                :class="{'bg-grey-dark text-white': has(item,selected)}"
                 @click="toggle(item)">
                 <div>
                     {{item.name}}
                 </div>
-                <div v-show="selected.includes(item)">
+                <div v-show="has(item,selected)">
                     <span v-if="multiple && numberedSelect" class="px-3 py-1 rounded-full bg-grey-darkest">
-                            {{selected.indexOf(item) + 1}}
+                            {{indexOf(item,selected) + 1}}
                     </span>
                     <span v-else>
                         <i class="fa fa-check text-black"></i>
@@ -44,8 +44,9 @@
             }
         },
         mounted() {
-            this.selected = (this.preSelected) ? this.preSelected : [];
-            this.data.forEach(item => console.log(typeof item))
+            if (this.preSelected.length && this.preSelected[0] !== null) {
+                this.selected.push(...this.preSelected)
+            }
         },
         data() {
             return {
@@ -54,12 +55,12 @@
         },
         methods: {
             toggle(item) {
-                let index = this.selected.indexOf(item);
+                let index = this.indexOf(item, this.selected);
                 if (this.multiple) {
                     if (index >= 0 && index === this.selected.length - 1) {
                         this.selected.splice(index, 1)
                         this.$emit('deselect', this.selected)
-                    } else if (index === -1) {
+                    } else {
                         this.selected.push(item)
                         this.$emit('select', this.selected)
                     }
@@ -70,6 +71,20 @@
                     }
                 }
                 this.$emit('update', this.selected);
+            },
+            has(needle, haystack) {
+                if (haystack.length <= 0) return false;
+                return haystack.find(item => item.id === needle.id) !== undefined
+            },
+            indexOf(needle, haystack) {
+                if (haystack.length <= 0) return -1;
+                let key = -1;
+                haystack.forEach((item, index) => {
+                    if (item.id === needle.id) {
+                        key = index
+                    }
+                })
+                return key;
             }
         }
     }
