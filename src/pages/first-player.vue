@@ -7,24 +7,21 @@
             </p>
         </div>
         <div slot="content" class="pt-8 ">
-            <list class="font-bold" :data="characters" :pre-selected="[firstPlayer]" @update="updateFirstPlayer"></list>
+            <list class="font-bold" :items="players" :pre-selected="[firstPlayer]" @update="updateFirstPlayer"></list>
         </div>
         <div slot="buttons">
-            <v-button text="Start Game" @click="startGame()"/>
+            <v-button text="Start Game" @click="startGame()" ></v-button>
         </div>
     </app-layout>
 </template>
 
 <script>
-    import { mapState, mapMutations } from 'vuex';
+    import { mapGetters, mapMutations } from 'vuex';
 
     export default {
         name: "first-player",
         computed: {
-            ...mapState({
-                characters: ({game}) => game.players,
-                firstPlayer: ({game}) => game.firstPlayer,
-            })
+            ...mapGetters(['players','firstPlayer'])
         },
         methods: {
             nextState() {

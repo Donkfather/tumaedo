@@ -7,7 +7,10 @@
             </p>
         </div>
         <div slot="content">
-            <list :data="characters" :pre-selected="selected" multiple @update="updatePlayers"></list>
+            <list :items="characters"
+                  :pre-selected="selected"
+                  multiple
+                  @update="updatePlayers"></list>
         </div>
         <div slot="buttons">
             <nav-buttons next-route="/select-cards"/>
@@ -17,18 +20,29 @@
 
 <script>
 
-    import { mapState, mapMutations } from 'vuex';
+    import {mapGetters, mapMutations} from 'vuex';
+    import {characters} from '../Repository';
 
     export default {
         name: "player-order",
+        data() {
+            return {
+            }
+        },
         computed: {
-            ...mapState({
-                characters: ({repositories}) => repositories.characters,
-                selected: ({game}) => game.players,
+            ...mapGetters({
+                selected: 'players',
             }),
+            characters(){
+                return characters
+            }
         },
         methods: {
-            ...mapMutations(['updatePlayers']),
+            updatePlayers(data) {
+                console.log(JSON.stringify(data));
+                this.$store.commit('updatePlayers',data)
+            },
+            ...mapMutations(['ADD_PLAYER','REMOVE_PLAYER']),
         }
 
     }

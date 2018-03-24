@@ -1,16 +1,16 @@
 <template>
     <div class="w-full">
         <ul class="list-reset w-full">
-            <li v-for="(item, index) in data" :key="index"
+            <li v-for="(item, index) in items" :key="index"
                 class="cursor-pointer p-4 w-full border-2 border-grey-lighter rounded mb-2 flex justify-between"
-                :class="{'bg-grey-dark text-white': has(item,selected)}"
+                :class="{'bg-grey-dark text-white': selected.includes(item)}"
                 @click="toggle(item)">
                 <div>
                     {{item.name}}
                 </div>
-                <div v-show="has(item,selected)">
+                <div v-show="selected.includes(item)">
                     <span v-if="multiple && numberedSelect" class="px-3 py-1 rounded-full bg-grey-darkest">
-                            {{indexOf(item,selected) + 1}}
+                            {{selected.indexOf(item) + 1}}
                     </span>
                     <span v-else>
                         <i class="fa fa-check text-black"></i>
@@ -18,6 +18,7 @@
                 </div>
             </li>
         </ul>
+        {{selected}}
     </div>
 </template>
 
@@ -25,7 +26,7 @@
     export default {
         name: "list-simple",
         props: {
-            data: {
+            items: {
                 type: Array,
                 default: [],
                 required: true,
@@ -43,9 +44,9 @@
                 default: true
             }
         },
-        bedoreMount() {
+        beforeMount() {
             if (this.preSelected.length && this.preSelected[0] !== null) {
-                this.selected.push(...this.preSelected)
+                this.selected = this.preSelected
             }
         },
         data() {
@@ -54,43 +55,31 @@
             }
         },
         methods: {
-            toggle(item) {
-                let index = this.indexOf(item, this.selected);
+            toggle: function (item) {
+                let index = this.selected.indexOf(item);
                 if (this.multiple) {
                     if (index >= 0 && index === this.selected.length - 1) {
-                        this.selected.splice(index, 1)
-                        this.$emit('deselect', this.selected)
-                    } else {
-                        this.selected.push(item)
-                        this.$emit('select', this.selected)
+                        this.removeItem(item,index);
+                    } else if (index < 0) {
+                        this.addItem(item);
                     }
                 }
                 else {
                     if (index < 0) {
                         this.selected = [item];
+                        this.$emit('select',item)
                     }
                 }
-                console.log(this.selected)
                 this.$emit('update', this.selected);
             },
-            has(needle, haystack) {
-                if (haystack.length <= 0) return false;
-                return haystack.find(item => item.id === needle.id) !== undefined
+            addItem(item){
+                this.selected.push(item)
+                this.$emit('select', item)
             },
-            indexOf(needle, haystack) {
-                if (haystack.length <= 0) return -1;
-                let key = -1;
-                haystack.forEach((item, index) => {
-                    if (item.id === needle.id) {
-                        key = index
-                    }
-                })
-                return key;
+            removeItem(item,index){
+                this.selected.splice(index,1)
+                this.$emit('deselect', item)
             }
         }
     }
 </script>
-
-<style scoped>
-
-</style>

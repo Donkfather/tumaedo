@@ -10,7 +10,7 @@
             </div>
             <div>
                 <div class="table w-full notebook">
-                    <div class="table-row w-full text-left font-bold" v-for="item in suspects">
+                    <div class="table-row w-full text-left font-bold" v-for="item in characters">
                         <div class="table-cell w-2/5 pl-3 p-2 select-none" v-text="item.name"></div>
                         <div class="table-cell text-center text-xl" v-for="item in otherPlayers">
                             <div class="flex flex-col h-full">
@@ -82,6 +82,7 @@
 </template>
 <script>
     import {mapState} from 'vuex'
+    import {characters, weapons, places} from '../Repository'
 
     export default {
         name: "notebook",
@@ -89,16 +90,16 @@
             return {
                 table: [],
                 players: [],
+                characters,
+                weapons,
+                places
             }
         },
         computed: {
             ...mapState({
-                otherPlayers: (({game}) => {
-                    return game.players.splice(1)
+                otherPlayers: (({players}) => {
+                    return players.splice(1)
                 }),
-                suspects: ({repositories}) => repositories.characters,
-                weapons: ({repositories}) => repositories.weapons,
-                places: ({repositories}) => repositories.places,
             })
         },
         beforeMount() {
