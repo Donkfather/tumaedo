@@ -41,7 +41,7 @@
         data() {
             return {
                 title: 'Cluedo Notebook',
-                displayNotebook: false
+                displayNotebook: true
             }
         },
         beforeMount() {

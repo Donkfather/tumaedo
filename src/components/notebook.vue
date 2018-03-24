@@ -10,9 +10,9 @@
             </div>
             <div>
                 <div class="table w-full notebook">
-                    <div class="table-row w-full text-left font-bold" v-for="player in players">
-                        <div class="table-cell w-2/5 pl-3 p-2 select-none" v-text="player.name"></div>
-                        <div class="table-cell text-center text-xl">
+                    <div class="table-row w-full text-left font-bold" v-for="item in suspects">
+                        <div class="table-cell w-2/5 pl-3 p-2 select-none" v-text="item.name"></div>
+                        <div class="table-cell text-center text-xl" v-for="item in otherPlayers">
                             <div class="flex flex-col h-full">
                                 <div class="flex-1 text-scarlet flex justify-center items-center text-3xl select-none">
                                     &cross;
@@ -26,45 +26,51 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="table-cell text-center text-xl">
+                    </div>
+                </div>
+            </div>
+            <div class="text-center bg-green-dark p-3">
+                <h2 class="text-xl uppercase text-bold text-mustard-lightest tracking-wide">Weapons</h2>
+            </div>
+            <div>
+                <div class="table w-full notebook">
+                    <div class="table-row w-full text-left font-bold" v-for="item in weapons">
+                        <div class="table-cell w-2/5 pl-3 p-2 select-none" v-text="item.name"></div>
+                        <div class="table-cell text-center text-xl" v-for="item in otherPlayers">
                             <div class="flex flex-col h-full">
-                                <div class="text-green flex-1 flex justify-center items-center text-3xl">
-                                    &check;
-                                </div>
-                                <div class="flex text-xs w-full" style="font-size: 9px;">
-                                    <div class="flex-1">1</div>
-                                    <div class="flex-1">2</div>
-                                    <div class="flex-1">3</div>
-                                    <div class="flex-1">4</div>
-                                    <div class="flex-1">5</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="table-cell text-center text-xl">
-                            <div class="flex flex-col h-full">
-                                <div class="flex-1 text-scarlet flex justify-center items-center text-3xl">
+                                <div class="flex-1 text-scarlet flex justify-center items-center text-3xl select-none">
                                     &cross;
                                 </div>
-                                <div class="flex text-xs w-full" style="font-size: 9px;">
-                                    <div class="flex-1">1</div>
-                                    <div class="flex-1">2</div>
-                                    <div class="flex-1">3</div>
-                                    <div class="flex-1">4</div>
-                                    <div class="flex-1">5</div>
+                                <div class="numbers flex justify-around w-full select-none" style="font-size: 9px;">
+                                    <div>1</div>
+                                    <div>2</div>
+                                    <div>3</div>
+                                    <div>4</div>
+                                    <div>5</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="table-cell text-center text-xl">
+                    </div>
+                </div>
+            </div>
+            <div class="text-center bg-green-dark p-3">
+                <h2 class="text-xl uppercase text-bold text-mustard-lightest tracking-wide">Places</h2>
+            </div>
+            <div>
+                <div class="table w-full notebook">
+                    <div class="table-row w-full text-left font-bold" v-for="item in places">
+                        <div class="table-cell w-2/5 pl-3 p-2 select-none" v-text="item.name"></div>
+                        <div class="table-cell text-center text-xl" v-for="item in otherPlayers">
                             <div class="flex flex-col h-full">
-                                <div class="text-green flex-1 flex justify-center items-center text-3xl">
-                                    &check;
+                                <div class="flex-1 text-scarlet flex justify-center items-center text-3xl select-none">
+                                    &cross;
                                 </div>
-                                <div class="flex text-xs w-full" style="font-size: 9px;">
-                                    <div class="flex-1">1</div>
-                                    <div class="flex-1">2</div>
-                                    <div class="flex-1">3</div>
-                                    <div class="flex-1">4</div>
-                                    <div class="flex-1">5</div>
+                                <div class="numbers flex justify-around w-full select-none" style="font-size: 9px;">
+                                    <div>1</div>
+                                    <div>2</div>
+                                    <div>3</div>
+                                    <div>4</div>
+                                    <div>5</div>
                                 </div>
                             </div>
                         </div>
@@ -75,17 +81,60 @@
     </div>
 </template>
 <script>
+    import {mapState} from 'vuex'
+
     export default {
         name: "notebook",
         data() {
             return {
-                players: []
+                table: [],
+                players: [],
             }
         },
-        beforeMount(){
-          this.players.push(...this.$store.state.repositories.characters);
-          this.players.push(...this.$store.state.repositories.weapons);
-          this.players.push(...this.$store.state.repositories.places);
+        computed: {
+            ...mapState({
+                otherPlayers: (({game}) => {
+                    return game.players.splice(1)
+                }),
+                suspects: ({repositories}) => repositories.characters,
+                weapons: ({repositories}) => repositories.weapons,
+                places: ({repositories}) => repositories.places,
+            })
+        },
+        beforeMount() {
+            let table = {
+                suspects: [
+                    {
+                        name: 'Scarlet',
+                        players:[
+                            {
+                                state: true,
+                                1: true,
+                                2: true,
+                                3: true,
+                                4: true,
+                                5: true,
+                            },
+                            {
+                                state: true,
+                                1: true,
+                                2: true,
+                                3: true,
+                                4: true,
+                                5: true,
+                            }
+                        ]
+                    }
+                ]
+            };
+            table = {
+                players: [
+                    {
+                        name: "Scarlet",
+
+                    }
+                ]
+            }
         }
     }
 </script>
