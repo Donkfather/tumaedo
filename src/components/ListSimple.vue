@@ -43,7 +43,7 @@
                 default: true
             }
         },
-        mounted() {
+        bedoreMount() {
             if (this.preSelected.length && this.preSelected[0] !== null) {
                 this.selected.push(...this.preSelected)
             }
@@ -70,6 +70,7 @@
                         this.selected = [item];
                     }
                 }
+                console.log(this.selected)
                 this.$emit('update', this.selected);
             },
             has(needle, haystack) {

@@ -119,6 +119,7 @@ const initialState = {
 const state = Object.assign({}, initialState);
 const mutations = {
     updatePlayers({game}, data) {
+        console.log(data)
         game.players = data;
     },
     updateMyCardsCharacters({game}, data) {
