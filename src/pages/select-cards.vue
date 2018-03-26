@@ -11,19 +11,19 @@
                 <div class="mb-2">
                     <h3 class="text-2xl text-grey">Characters</h3>
                 </div>
-                <list class="font-bold" :items="characters" multiple :numbered-select="false" :pre-selected="myCards.characters" @update="updateMyCardsCharacters"></list>
+                <list-simple class="font-bold" :items="characters" multiple :numbered-select="false" :pre-selected="myCards.characters" @update="updateMyCardsCharacters"></list-simple>
             </div>
             <div class="weapons mb-4">
                 <div class="mb-2">
                     <h3 class="text-2xl text-grey">Weapons</h3>
                 </div>
-                <list class="font-bold" :items="weapons" multiple :numbered-select="false" :pre-selected="myCards.weapons" @update="updateMyCardsWeapons"></list>
+                <list-simple class="font-bold" :items="weapons" multiple :numbered-select="false" :pre-selected="myCards.weapons" @update="updateMyCardsWeapons"></list-simple>
             </div>
             <div class="places mb-4">
                 <div class="mb-2">
                     <h3 class="text-2xl text-grey">Places</h3>
                 </div>
-                <list class="font-bold" :items="places" multiple :numbered-select="false" :pre-selected="myCards.places" @update="updateMyCardsPlaces"></list>
+                <list-simple class="font-bold" :items="places" multiple :numbered-select="false" :pre-selected="myCards.places" @update="updateMyCardsPlaces"></list-simple>
             </div>
         </div>
         <div slot="buttons">

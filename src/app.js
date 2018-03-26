@@ -15,7 +15,7 @@ window.Bus = new Vue();
 window._ = require('lodash');
 
 Vue.component('app-layout', require('./components/App'))
-Vue.component('list', require('./components/ListSimple'))
+Vue.component('list-simple', require('./components/ListSimple'))
 Vue.component('nav-buttons', require('./components/navButtons'))
 Vue.component('v-button', require('./components/button'))
 

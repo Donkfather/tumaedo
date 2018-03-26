@@ -7,9 +7,7 @@ import Vuex from 'vuex';
 // })
 Vue.use(Vuex)
 const initialState = {
-    players: {
-        players: []
-    },
+    players: [],
     myCards: {
         characters: [],
         weapons: [],

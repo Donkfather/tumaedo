@@ -98,7 +98,7 @@
         computed: {
             ...mapState({
                 otherPlayers: (({players}) => {
-                    return players.splice(1)
+                    return players.splice(0,1)
                 }),
             })
         },

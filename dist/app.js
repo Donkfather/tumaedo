@@ -12226,7 +12226,7 @@ window.Bus = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a();
 window._ = __webpack_require__(30);
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('app-layout', __webpack_require__(32));
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('list', __webpack_require__(35));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('list-simple', __webpack_require__(35));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('nav-buttons', __webpack_require__(38));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('v-button', __webpack_require__(41));
 
@@ -15569,12 +15569,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             return __WEBPACK_IMPORTED_MODULE_1__Repository__["a" /* characters */];
         }
     }),
-    methods: _extends({
-        updatePlayers: function updatePlayers(data) {
-            console.log(JSON.stringify(data));
-            this.$store.dispatch('updatePlayers', data);
-        }
-    }, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapMutations */])(['ADD_PLAYER', 'REMOVE_PLAYER']))
+    methods: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapMutations */])(['ADD_PLAYER', 'REMOVE_PLAYER', 'updatePlayers']))
 
 });
 
@@ -15605,7 +15600,7 @@ var render = function() {
       "div",
       { attrs: { slot: "content" }, slot: "content" },
       [
-        _c("list", {
+        _c("list-simple", {
           attrs: {
             items: _vm.characters,
             "pre-selected": _vm.selected,
@@ -15786,7 +15781,7 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _c("list", {
+            _c("list-simple", {
               staticClass: "font-bold",
               attrs: {
                 items: _vm.characters,
@@ -15810,7 +15805,7 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _c("list", {
+            _c("list-simple", {
               staticClass: "font-bold",
               attrs: {
                 items: _vm.weapons,
@@ -15834,7 +15829,7 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _c("list", {
+            _c("list-simple", {
               staticClass: "font-bold",
               attrs: {
                 items: _vm.places,
@@ -15985,7 +15980,7 @@ var render = function() {
       "div",
       { staticClass: "pt-8 ", attrs: { slot: "content" }, slot: "content" },
       [
-        _c("list", {
+        _c("list-simple", {
           staticClass: "font-bold",
           attrs: { items: _vm.players, "pre-selected": [_vm.firstPlayer] },
           on: { update: _vm.updateFirstPlayer }
@@ -16966,7 +16961,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         otherPlayers: function otherPlayers(_ref) {
             var players = _ref.players;
 
-            return players.splice(1);
+            return players.splice(0, 1);
         }
     })),
     beforeMount: function beforeMount() {
@@ -17307,9 +17302,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 // })
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */]);
 var initialState = {
-    players: {
-        players: []
-    },
+    players: [],
     myCards: {
         characters: [],
         weapons: [],

@@ -7,11 +7,11 @@
             </p>
         </div>
         <div slot="content">
-            <list :items="characters"
+            <list-simple :items="characters"
                   :pre-selected="selected"
                   multiple
                   @update="updatePlayers"
-            ></list>
+            ></list-simple>
         </div>
         <div slot="buttons">
             <nav-buttons next-route="/select-cards"/>
@@ -39,11 +39,7 @@
             }
         },
         methods: {
-            updatePlayers(data) {
-                console.log(JSON.stringify(data));
-                this.$store.dispatch('updatePlayers',data)
-            },
-            ...mapMutations(['ADD_PLAYER','REMOVE_PLAYER']),
+            ...mapMutations(['ADD_PLAYER','REMOVE_PLAYER','updatePlayers']),
         }
 
     }
