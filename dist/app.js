@@ -12257,7 +12257,6 @@ var App = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
 
     computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_8_vuex__["b" /* mapGetters */])(['myCards', 'players'])),
     beforeMount: function beforeMount() {
-        console.log(__WEBPACK_IMPORTED_MODULE_9__store__["a" /* default */]);
         var that = this;
         Bus.$on('restart', function () {
             that.restartApp();
@@ -17318,7 +17317,7 @@ var state = Object.assign({}, initialState);
 
 var mutations = {
     updatePlayers: function updatePlayers(state, data) {
-        state.players = data;
+        state.players = [].concat(_toConsumableArray(data));
     },
     ADD_PLAYER: function ADD_PLAYER(state, item) {
         state.players.push(item);

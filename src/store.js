@@ -23,7 +23,7 @@ const state = Object.assign({}, initialState);
 
 const mutations = {
     updatePlayers(state, data) {
-        state.players = data;
+        state.players = [...data];
     },
     ADD_PLAYER(state, item) {
         state.players.push(item);

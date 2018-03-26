@@ -59,7 +59,6 @@ const App = new Vue({
         ...mapGetters(['myCards','players'])
     },
     beforeMount() {
-        console.log(store);
         let that = this;
         Bus.$on('restart', () => {
             that.restartApp();
