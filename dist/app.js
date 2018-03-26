@@ -16956,13 +16956,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         };
     },
 
-    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["d" /* mapState */])({
-        otherPlayers: function otherPlayers(_ref) {
-            var players = _ref.players;
-
-            return players.splice(0, 1);
-        }
-    })),
+    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapGetters */])(['otherPlayers'])),
     beforeMount: function beforeMount() {
         var table = {
             suspects: [{
@@ -17422,6 +17416,11 @@ var getters = {
     },
     myCards: function myCards(state) {
         return state.myCards;
+    },
+    otherPlayers: function otherPlayers(state) {
+        return state.players.filter(function (item, index) {
+            return index > 0;
+        });
     }
 };
 

@@ -81,7 +81,7 @@
     </div>
 </template>
 <script>
-    import {mapState} from 'vuex'
+    import {mapGetters} from 'vuex'
     import {characters, weapons, places} from '../Repository'
 
     export default {
@@ -96,11 +96,7 @@
             }
         },
         computed: {
-            ...mapState({
-                otherPlayers: (({players}) => {
-                    return players.splice(0,1)
-                }),
-            })
+            ...mapGetters(['otherPlayers']),
         },
         beforeMount() {
             let table = {

@@ -78,8 +78,8 @@ const mutations = {
     },
 };
 const actions = {
-    updatePlayers({commit},players){
-      commit('updatePlayers',players)
+    updatePlayers({commit}, players) {
+        commit('updatePlayers', players)
     },
     restartApp({commit}) {
         window.localStorage.clear('vuex');
@@ -93,21 +93,23 @@ const actions = {
     }
 };
 const getters = {
-        players: state => {
-            return state.players
-        },
-        firstPlayer: state => state.firstPlayer,
-        getCurrentPlayer:
-            ({players, currentPlayer}) => {
-                return players[currentPlayer] || {};
-            },
-        flatCards:
-            ({myCards}) => {
-                return _.flatMap(myCards)
-            },
-        myCards:
-            state => state.myCards
-    };
+    players: state => {
+        return state.players
+    },
+    firstPlayer: state => state.firstPlayer,
+    getCurrentPlayer:({players, currentPlayer}) => {
+        return players[currentPlayer] || {};
+    },
+    flatCards: ({myCards}) => {
+        return _.flatMap(myCards)
+    },
+    myCards: state => state.myCards,
+    otherPlayers: state => {
+        return state.players.filter((item,index)=>{
+            return index > 0;
+        })
+    }
+};
 
 
 export default new Vuex.Store({
