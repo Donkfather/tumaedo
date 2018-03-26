@@ -2,8 +2,9 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import VuexPersistence from 'vuex-persist';
 
+let storage = window.sessionStorage;
 const vuexLocal = new VuexPersistence({
-    storage: window.localStorage,
+    storage,
 })
 Vue.use(Vuex)
 const initialState = {
@@ -13,8 +14,8 @@ const initialState = {
         weapons: [],
         places: []
     },
-    firstPlayer: null,
-    currentPlayer: null,
+    firstPlayer: 0,
+    currentPlayer: 0,
     questions: [],
     gameStarted: false,
 };
@@ -42,21 +43,20 @@ const mutations = {
     updateMyCardsPlaces(state, data) {
         state.myCards.places = [...data];
     },
-    updateFirstPlayer({firstPlayer, currentPlayer, players}, player) {
-        let index = players.indexOf(player)
-        firstPlayer = player;
-        currentPlayer = index;
-        console.log(firstPlayer,currentPlayer);
+    updateFirstPlayer(state, player) {
+        let index = state.players.indexOf(player)
+        state.firstPlayer = index;
+        state.currentPlayer = index;
     },
-    nextPlayer({currentPlayer, players}) {
-        return (currentPlayer + 1 >= players.length) ?
-            currentPlayer = 0
+    nextPlayer(state) {
+        (state.currentPlayer + 1 >= state.players.length) ?
+            state.currentPlayer = 0
             :
-            currentPlayer += 1;
+            state.currentPlayer += 1;
     },
     restartApp(state) {
         console.log('restarting app...');
-
+        state = Object.assign({},initialState)
         state.players = [];
         state.myCards = {
             characters: [],
@@ -67,7 +67,7 @@ const mutations = {
         state.currentPlayer = null;
         state.questions = [];
         state.gameStarted = false;
-
+        console.log(state)
         console.log('app restarted');
     },
     startGame(state) {
@@ -99,17 +99,25 @@ const getters = {
         return state.players
     },
     firstPlayer: state => state.firstPlayer,
-    getCurrentPlayer:({players, currentPlayer}) => {
-        return players[currentPlayer] || {};
+    currentPlayer:({currentPlayer}) => {
+        return currentPlayer;
+    },
+    currentPlayerName:({players, currentPlayer}) => {
+        return players[currentPlayer] || "";
     },
     flatCards: ({myCards}) => {
         return _.flatMap(myCards)
     },
     myCards: state => state.myCards,
-    otherPlayers: state => {
+    otherPlayersThanMyself: state => {
         return state.players.filter((item,index)=>{
             return index > 0;
         })
+    },
+    otherPlayersThanCurrent: state => {
+        return state.players.filter((item,index)=>{
+            return index !== state.currentPlayer
+        });
     }
 };
 

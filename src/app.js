@@ -8,7 +8,9 @@ import Question from './pages/question.vue'
 import Notebook from './components/notebook.vue'
 import {mapGetters} from 'vuex';
 import store from './store';
+import VModal from 'vue-js-modal'
 
+Vue.use(VModal)
 Vue.use(VueRouter);
 
 window.Bus = new Vue();
@@ -34,10 +36,9 @@ const router = new VueRouter({
     // mode: 'history',
 })
 router.beforeEach((to, from, next) => {
-    // console.log(store.state.players,store.state.players.length)
-    // if (to.name === 'select-cards' && !store.state.players.length > 0) {
-    //     next('player-order');
-    // }
+    if (to.name === 'select-cards' && !store.state.players.length > 0) {
+        next('player-order');
+    }
     next()
 })
 

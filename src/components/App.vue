@@ -53,6 +53,7 @@
                 Bus.$emit('next-step');
             },
             restartApp() {
+                window.sessionStorage.removeItem('vuex')
                 Bus.$emit('restart');
             },
             toggleNotebook() {

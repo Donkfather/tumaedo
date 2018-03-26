@@ -8,7 +8,7 @@
 
         <div slot="content">
             <div class="text-2xl mb-6">
-                About what did {{getCurrentPlayer().name}} asked ?
+                About what did {{currentPlayerName}} asked ?
             </div>
             <div class="justify-between flex flex-col sm:flex-row mb-6 -mx-2">
                 <div class="relative md:w-1/3 sm:w-full px-2 mb-4 sm:mb-0">
@@ -101,7 +101,7 @@
                         <option
                                 :value="player"
                                 class="py-6"
-                                v-for="(player,index) in players"
+                                v-for="(player,index) in otherPlayersThanCurrent"
                                 :key="index"
                         >
                             {{player}}
@@ -129,7 +129,7 @@
                         <option
                                 :value="item"
                                 class="py-6"
-                                v-for="item in questionCards"
+                                v-for="item in answerCards"
                         >
                             {{item}}
                         </option>
@@ -149,7 +149,7 @@
 </template>
 
 <script>
-    import {mapState, mapGetters} from 'vuex';
+    import {mapGetters} from 'vuex';
     import {characters, weapons, places} from "../Repository";
 
     export default {
@@ -170,11 +170,11 @@
             this.weapons = weapons;
             this.places = places;
             if (!this.$store.state.gameStarted) {
-                // Bus.$emit('restart');
+                Bus.$emit('restart');
             }
         },
         computed: {
-            questionCards() {
+            answerCards() {
                 const cards = [];
                 if (this.question.character) {
                     cards.push(this.question.character);
@@ -185,18 +185,15 @@
                 if (this.question.place) {
                     cards.push(this.question.place);
                 }
-
                 return cards;
             },
-            ...mapState({
-                currentPlayer: ({currentPlayer}) => currentPlayer,
-                players: ({players}) => players,
-                myCards: ({myCards}) => myCards,
-                questions: ({questions}) => questions
-            }),
+            currentPlayerName() {
+                return this.players[this.currentPlayer]
+            },
+            ...mapGetters(['currentPlayer', 'flatCards','players','questions','myCards','otherPlayersThanCurrent']),
+
         },
         methods: {
-            ...mapGetters(['getCurrentPlayer', 'flatCards']),
             nextQuestion() {
                 Bus.$emit('question', this.question);
                 Bus.$emit('step');
