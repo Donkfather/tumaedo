@@ -7,7 +7,7 @@ import FirstPlayer from './pages/first-player.vue'
 import Question from './pages/question.vue'
 import Notebook from './components/notebook.vue'
 import {mapGetters} from 'vuex';
-import store from './Vuex';
+import store from './store';
 
 Vue.use(VueRouter);
 

@@ -7,7 +7,9 @@ import Vuex from 'vuex';
 // })
 Vue.use(Vuex)
 const initialState = {
-    players: [],
+    players: {
+        players: []
+    },
     myCards: {
         characters: [],
         weapons: [],
@@ -23,8 +25,7 @@ const state = Object.assign({}, initialState);
 
 const mutations = {
     updatePlayers(state, data) {
-        state.players.splice(0, state.players.length);
-        state.players.push(...data);
+        state.players = data;
     },
     ADD_PLAYER(state, item) {
         state.players.push(item);
@@ -79,6 +80,9 @@ const mutations = {
     },
 };
 const actions = {
+    updatePlayers({commit},players){
+      commit('updatePlayers',players)
+    },
     restartApp({commit}) {
         window.localStorage.clear('vuex');
         commit('restartApp');

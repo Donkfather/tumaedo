@@ -10,8 +10,7 @@
             <list :items="characters"
                   :pre-selected="selected"
                   multiple
-                  @select="ADD_PLAYER"
-                  @deselect="REMOVE_PLAYER"
+                  @update="updatePlayers"
             ></list>
         </div>
         <div slot="buttons">
@@ -42,7 +41,7 @@
         methods: {
             updatePlayers(data) {
                 console.log(JSON.stringify(data));
-                this.$store.commit('updatePlayers',data)
+                this.$store.dispatch('updatePlayers',data)
             },
             ...mapMutations(['ADD_PLAYER','REMOVE_PLAYER']),
         }

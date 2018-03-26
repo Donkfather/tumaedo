@@ -57,7 +57,7 @@
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
+/******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 6);
@@ -12206,7 +12206,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_notebook_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_notebook_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__components_notebook_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_vuex__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__Vuex__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__store__ = __webpack_require__(29);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 
@@ -12248,7 +12248,7 @@ var App = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
     el: "#app",
     template: '\n        <transition name="fade" mode="out-in">\n            <router-view></router-view>\n        </transition>\n    ',
     router: router,
-    store: __WEBPACK_IMPORTED_MODULE_9__Vuex__["a" /* default */],
+    store: __WEBPACK_IMPORTED_MODULE_9__store__["a" /* default */],
     data: function data() {
         return {
             transitionName: 'slide-left'
@@ -12257,7 +12257,7 @@ var App = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
 
     computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_8_vuex__["b" /* mapGetters */])(['myCards', 'players'])),
     beforeMount: function beforeMount() {
-        console.log(__WEBPACK_IMPORTED_MODULE_9__Vuex__["a" /* default */]);
+        console.log(__WEBPACK_IMPORTED_MODULE_9__store__["a" /* default */]);
         var that = this;
         Bus.$on('restart', function () {
             that.restartApp();
@@ -15551,7 +15551,6 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
-//
 
 
 
@@ -15573,7 +15572,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     methods: _extends({
         updatePlayers: function updatePlayers(data) {
             console.log(JSON.stringify(data));
-            this.$store.commit('updatePlayers', data);
+            this.$store.dispatch('updatePlayers', data);
         }
     }, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapMutations */])(['ADD_PLAYER', 'REMOVE_PLAYER']))
 
@@ -15612,7 +15611,7 @@ var render = function() {
             "pre-selected": _vm.selected,
             multiple: ""
           },
-          on: { select: _vm.ADD_PLAYER, deselect: _vm.REMOVE_PLAYER }
+          on: { update: _vm.updatePlayers }
         })
       ],
       1
@@ -17308,7 +17307,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 // })
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */]);
 var initialState = {
-    players: [],
+    players: {
+        players: []
+    },
     myCards: {
         characters: [],
         weapons: [],
@@ -17324,10 +17325,7 @@ var state = Object.assign({}, initialState);
 
 var mutations = {
     updatePlayers: function updatePlayers(state, data) {
-        var _state$players;
-
-        state.players.splice(0, state.players.length);
-        (_state$players = state.players).push.apply(_state$players, _toConsumableArray(data));
+        state.players = data;
     },
     ADD_PLAYER: function ADD_PLAYER(state, item) {
         state.players.push(item);
@@ -17390,19 +17388,24 @@ var mutations = {
     }
 };
 var actions = {
-    restartApp: function restartApp(_ref5) {
+    updatePlayers: function updatePlayers(_ref5, players) {
         var commit = _ref5.commit;
+
+        commit('updatePlayers', players);
+    },
+    restartApp: function restartApp(_ref6) {
+        var commit = _ref6.commit;
 
         window.localStorage.clear('vuex');
         commit('restartApp');
     },
-    step: function step(_ref6) {
-        var commit = _ref6.commit;
+    step: function step(_ref7) {
+        var commit = _ref7.commit;
 
         commit('nextPlayer');
     },
-    START_GAME: function START_GAME(_ref7) {
-        var commit = _ref7.commit;
+    START_GAME: function START_GAME(_ref8) {
+        var commit = _ref8.commit;
 
         commit('startGame');
     }
@@ -17414,14 +17417,14 @@ var getters = {
     firstPlayer: function firstPlayer(state) {
         return state.firstPlayer;
     },
-    getCurrentPlayer: function getCurrentPlayer(_ref8) {
-        var players = _ref8.players,
-            currentPlayer = _ref8.currentPlayer;
+    getCurrentPlayer: function getCurrentPlayer(_ref9) {
+        var players = _ref9.players,
+            currentPlayer = _ref9.currentPlayer;
 
         return players[currentPlayer] || {};
     },
-    flatCards: function flatCards(_ref9) {
-        var myCards = _ref9.myCards;
+    flatCards: function flatCards(_ref10) {
+        var myCards = _ref10.myCards;
 
         return _.flatMap(myCards);
     },
