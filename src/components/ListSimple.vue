@@ -18,7 +18,6 @@
                 </div>
             </li>
         </ul>
-        {{selected}}
     </div>
 </template>
 

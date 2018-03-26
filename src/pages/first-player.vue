@@ -7,7 +7,7 @@
             </p>
         </div>
         <div slot="content" class="pt-8 ">
-            <list-simple class="font-bold" :items="players" :pre-selected="[firstPlayer]" @update="updateFirstPlayer"></list-simple>
+            <list-simple class="font-bold" :items="players" :pre-selected="[firstPlayer]" @select="updateFirstPlayer"></list-simple>
         </div>
         <div slot="buttons">
             <v-button text="Start Game" @click="startGame()" ></v-button>
@@ -27,7 +27,9 @@
             nextState() {
                 this.$router.push('/question')
             },
-            ...mapMutations(['updateFirstPlayer']),
+            updateFirstPlayer(player){
+              this.$store.commit('updateFirstPlayer',player)
+            },
             startGame(){
                 Bus.$emit('start-game');
             }

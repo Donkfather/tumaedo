@@ -11,7 +11,7 @@
             <div>
                 <div class="table w-full notebook">
                     <div class="table-row w-full text-left font-bold" v-for="item in characters">
-                        <div class="table-cell w-2/5 pl-3 p-2 select-none" v-text="item.name"></div>
+                        <div class="table-cell w-2/5 pl-3 p-2 select-none" v-text="item"></div>
                         <div class="table-cell text-center text-xl" v-for="item in otherPlayers">
                             <div class="flex flex-col h-full">
                                 <div class="flex-1 text-scarlet flex justify-center items-center text-3xl select-none">
@@ -35,7 +35,7 @@
             <div>
                 <div class="table w-full notebook">
                     <div class="table-row w-full text-left font-bold" v-for="item in weapons">
-                        <div class="table-cell w-2/5 pl-3 p-2 select-none" v-text="item.name"></div>
+                        <div class="table-cell w-2/5 pl-3 p-2 select-none" v-text="item"></div>
                         <div class="table-cell text-center text-xl" v-for="item in otherPlayers">
                             <div class="flex flex-col h-full">
                                 <div class="flex-1 text-scarlet flex justify-center items-center text-3xl select-none">
@@ -59,7 +59,7 @@
             <div>
                 <div class="table w-full notebook">
                     <div class="table-row w-full text-left font-bold" v-for="item in places">
-                        <div class="table-cell w-2/5 pl-3 p-2 select-none" v-text="item.name"></div>
+                        <div class="table-cell w-2/5 pl-3 p-2 select-none" v-text="item"></div>
                         <div class="table-cell text-center text-xl" v-for="item in otherPlayers">
                             <div class="flex flex-col h-full">
                                 <div class="flex-1 text-scarlet flex justify-center items-center text-3xl select-none">
@@ -90,10 +90,12 @@
             return {
                 table: [],
                 players: [],
-                characters,
-                weapons,
-                places
             }
+        },
+        beforeCreate(){
+          this.characters = characters;
+          this.weapons = weapons;
+          this.places = places;
         },
         computed: {
             ...mapGetters(['otherPlayers']),
@@ -128,7 +130,6 @@
                 players: [
                     {
                         name: "Scarlet",
-
                     }
                 ]
             }

@@ -15,11 +15,7 @@
                 </div>
             </div>
         </nav>
-        <div class="mt-8">
-            <pre class="mt-8">
-                {{$store.state.players}}
-            </pre>
-        </div>
+
         <div class="wrapper relative"  style="padding-top: 55px; padding-bottom: 20px;">
             <notebook class="absolute top left z-10 w-full" v-show="displayNotebook" />
 

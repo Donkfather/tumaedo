@@ -1,10 +1,10 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-// import VuexPersistence from 'vuex-persist';
-//
-// const vuexLocal = new VuexPersistence({
-//     storage: window.localStorage,
-// })
+import VuexPersistence from 'vuex-persist';
+
+const vuexLocal = new VuexPersistence({
+    storage: window.localStorage,
+})
 Vue.use(Vuex)
 const initialState = {
     players: [],
@@ -43,8 +43,10 @@ const mutations = {
         state.myCards.places = [...data];
     },
     updateFirstPlayer({firstPlayer, currentPlayer, players}, player) {
-        firstPlayer = player[0];
-        currentPlayer = players.indexOf(player[0]);
+        let index = players.indexOf(player)
+        firstPlayer = player;
+        currentPlayer = index;
+        console.log(firstPlayer,currentPlayer);
     },
     nextPlayer({currentPlayer, players}) {
         return (currentPlayer + 1 >= players.length) ?
@@ -117,5 +119,5 @@ export default new Vuex.Store({
     mutations,
     actions,
     getters,
-    // plugins: [vuexLocal.plugin]
+    plugins: [vuexLocal.plugin]
 })

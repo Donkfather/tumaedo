@@ -26,7 +26,7 @@
                                 :value="character"
                                 v-for="character in characters"
                         >
-                            {{character.name}}
+                            {{character}}
                         </option>
                     </select>
                     <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 mr-3 text-grey-lightest">
@@ -50,7 +50,7 @@
                                 :value="weapon"
                                 v-for="weapon in weapons"
                         >
-                            {{weapon.name}}
+                            {{weapon}}
                         </option>
                     </select>
                     <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 mr-3 text-grey-lightest">
@@ -74,7 +74,7 @@
                                 :value="place"
                                 v-for="place in places"
                         >
-                            {{place.name}}
+                            {{place}}
                         </option>
                     </select>
                     <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 mr-3 text-grey-lightest">
@@ -104,7 +104,7 @@
                                 v-for="(player,index) in players"
                                 :key="index"
                         >
-                            {{player.name}}
+                            {{player}}
                         </option>
                     </select>
                     <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 mr-3 text-grey-lightest">
@@ -131,7 +131,7 @@
                                 class="py-6"
                                 v-for="item in questionCards"
                         >
-                            {{item.name}}
+                            {{item}}
                         </option>
                     </select>
                     <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 mr-3 text-grey-lightest">
@@ -150,6 +150,7 @@
 
 <script>
     import {mapState, mapGetters} from 'vuex';
+    import {characters, weapons, places} from "../Repository";
 
     export default {
         name: "question",
@@ -164,10 +165,13 @@
                 }
             }
         },
-        beforeCreate(){
-          if(! this.$store.state.gameStarted){
-              // Bus.$emit('restart');
-          }
+        beforeCreate() {
+            this.characters = characters;
+            this.weapons = weapons;
+            this.places = places;
+            if (!this.$store.state.gameStarted) {
+                // Bus.$emit('restart');
+            }
         },
         computed: {
             questionCards() {
@@ -185,19 +189,16 @@
                 return cards;
             },
             ...mapState({
-                    currentPlayer: ({game}) => game.currentPlayer,
-                    players: ({game}) => game.players,
-                    myCards: ({game}) => game.myCards,
-                    questions: ({game}) => game.questions,
-                    characters: ({repositories}) => repositories.characters,
-                    weapons: ({repositories}) => repositories.weapons,
-                    places: ({repositories}) => repositories.places,
-                }),
+                currentPlayer: ({currentPlayer}) => currentPlayer,
+                players: ({players}) => players,
+                myCards: ({myCards}) => myCards,
+                questions: ({questions}) => questions
+            }),
         },
         methods: {
-            ...mapGetters(['getCurrentPlayer', 'getFlatCards']),
+            ...mapGetters(['getCurrentPlayer', 'flatCards']),
             nextQuestion() {
-                Bus.$emit('question',this.question);
+                Bus.$emit('question', this.question);
                 Bus.$emit('step');
 
                 this.question = {
