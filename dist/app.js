@@ -57,7 +57,7 @@
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
+/******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 7);
@@ -12297,7 +12297,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_notebook_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_notebook_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__components_notebook_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_vuex__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__Vuex__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__store__ = __webpack_require__(30);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 
@@ -12339,7 +12339,7 @@ var App = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
     el: "#app",
     template: '\n        <transition name="fade" mode="out-in">\n            <router-view></router-view>\n        </transition>\n    ',
     router: router,
-    store: __WEBPACK_IMPORTED_MODULE_9__Vuex__["a" /* default */],
+    store: __WEBPACK_IMPORTED_MODULE_9__store__["a" /* default */],
     data: function data() {
         return {
             transitionName: 'slide-left'
