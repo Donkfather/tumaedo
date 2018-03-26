@@ -10,7 +10,9 @@
             <list :items="characters"
                   :pre-selected="selected"
                   multiple
-                  @update="updatePlayers"></list>
+                  @select="ADD_PLAYER"
+                  @deselect="REMOVE_PLAYER"
+            ></list>
         </div>
         <div slot="buttons">
             <nav-buttons next-route="/select-cards"/>

@@ -6,7 +6,7 @@
                 :class="{'bg-grey-dark text-white': selected.includes(item)}"
                 @click="toggle(item)">
                 <div>
-                    {{item.name}}
+                    {{item}}
                 </div>
                 <div v-show="selected.includes(item)">
                     <span v-if="multiple && numberedSelect" class="px-3 py-1 rounded-full bg-grey-darkest">
