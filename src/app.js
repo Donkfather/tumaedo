@@ -10,16 +10,16 @@ import {mapGetters} from 'vuex';
 import store from './store';
 import VModal from 'vue-js-modal'
 
-Vue.use(VModal)
+Vue.use(VModal);
 Vue.use(VueRouter);
 
 window.Bus = new Vue();
 window._ = require('lodash');
 
-Vue.component('app-layout', require('./components/App'))
-Vue.component('list-simple', require('./components/ListSimple'))
-Vue.component('nav-buttons', require('./components/navButtons'))
-Vue.component('v-button', require('./components/button'))
+Vue.component('app-layout', require('./components/App'));
+Vue.component('list-simple', require('./components/ListSimple'));
+Vue.component('nav-buttons', require('./components/navButtons'));
+Vue.component('v-button', require('./components/button'));
 
 const routes = [
     {path: '/', component: Welcome},
@@ -34,13 +34,13 @@ const routes = [
 const router = new VueRouter({
     routes,
     // mode: 'history',
-})
+});
 router.beforeEach((to, from, next) => {
     if (to.name === 'select-cards' && !store.state.players.length > 0) {
         next('player-order');
     }
     next()
-})
+});
 
 const App = new Vue({
     el: "#app",
@@ -72,19 +72,19 @@ const App = new Vue({
         });
         Bus.$on('question', (question) => {
             that.$store.commit('addQuestion', question)
-        })
+        });
         Bus.$on('step', () => {
             that.$store.dispatch('step');
         })
     },
     methods: {
         restartApp() {
-            this.$store.dispatch('restartApp');
+            this.$store.dispatch('RESTART_APP');
             this.$router.push('/player-order');
         },
         startGame() {
             if (!this.players.length) {
-                this.$router.push('/player-order')
+                this.$router.push('/player-order');
                 return;
             }
             if (!this.$store.getters.flatCards.length) {

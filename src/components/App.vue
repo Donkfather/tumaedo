@@ -11,7 +11,12 @@
                     </h1>
                 </div>
                 <div class="w-1/5 text-xl">
-                    <i class="fa fa-sticky-note" v-if="$store.state.gameStarted" @click="toggleNotebook()"></i>
+                    <template v-if="$store.state.gameStarted">
+                        <span @click="toggleNotebook()">
+                        <i class="fa fa-sticky-note" v-show="!displayNotebook"></i>
+                        <i class="fa fa-times" v-show="displayNotebook"></i>
+                        </span>
+                    </template>
                 </div>
             </div>
         </nav>
@@ -53,7 +58,6 @@
                 Bus.$emit('next-step');
             },
             restartApp() {
-                window.sessionStorage.removeItem('vuex')
                 Bus.$emit('restart');
             },
             toggleNotebook() {

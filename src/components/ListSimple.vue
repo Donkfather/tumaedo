@@ -44,13 +44,13 @@
             }
         },
         beforeMount() {
-            if (this.preSelected.length && this.preSelected[0] !== null) {
-                this.selected = this.preSelected
-            }
+            // if (this.preSelected.length && this.preSelected[0] !== null) {
+            //     this.selected = this.preSelected
+            // }
         },
-        data() {
-            return {
-                selected: [],
+        computed: {
+            selected() {
+                return this.preSelected
             }
         },
         methods: {
@@ -58,25 +58,24 @@
                 let index = this.selected.indexOf(item);
                 if (this.multiple) {
                     if (index >= 0 && index === this.selected.length - 1) {
-                        this.removeItem(item,index);
+                        this.removeItem(item, index);
                     } else if (index < 0) {
                         this.addItem(item);
                     }
                 }
                 else {
                     if (index < 0) {
-                        this.selected = [item];
-                        this.$emit('select',item)
+                        this.$emit('select', item)
                     }
                 }
                 this.$emit('update', this.selected);
             },
-            addItem(item){
-                this.selected.push(item)
+            addItem(item) {
+                this.selected.push(item);
                 this.$emit('select', item)
             },
-            removeItem(item,index){
-                this.selected.splice(index,1)
+            removeItem(item, index) {
+                this.selected.splice(index, 1);
                 this.$emit('deselect', item)
             }
         }

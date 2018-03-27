@@ -7687,6 +7687,10 @@ body {
   vertical-align: middle;
 }
 
+.table.notebook .table-cell.notebool-box {
+    width: 100%;
+}
+
 .select {
   display: block;
   color: #606f7b;

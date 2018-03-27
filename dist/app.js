@@ -12308,7 +12308,7 @@ var App = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
 
     methods: {
         restartApp: function restartApp() {
-            this.$store.dispatch('restartApp');
+            this.$store.dispatch('RESTART_APP');
             this.$router.push('/player-order');
         },
         startGame: function startGame() {
@@ -15966,12 +15966,13 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "first-player",
-    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapGetters */])(['players', 'firstPlayer'])),
+    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapGetters */])(['players', 'firstPlayerName'])),
     methods: {
         nextState: function nextState() {
             this.$router.push('/question');
@@ -16014,7 +16015,7 @@ var render = function() {
       [
         _c("list-simple", {
           staticClass: "font-bold",
-          attrs: { items: _vm.players, "pre-selected": [_vm.firstPlayer] },
+          attrs: { items: _vm.players, "pre-selected": [_vm.firstPlayerName] },
           on: { select: _vm.updateFirstPlayer }
         })
       ],
@@ -16301,9 +16302,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     }, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapGetters */])(['currentPlayer', 'flatCards', 'players', 'questions', 'myCards', 'otherPlayersThanCurrent'])),
     methods: {
         nextQuestion: function nextQuestion() {
-            Bus.$emit('question', this.question);
+            Bus.$emit('question', _extends({ asker: this.players[this.currentPlayer] }, this.question));
             Bus.$emit('step');
-
             this.question = {
                 character: '',
                 weapon: '',
@@ -16676,7 +16676,7 @@ var render = function() {
               [
                 _c("option", { staticClass: "py-6", attrs: { value: "" } }, [
                   _vm._v(
-                    "\n                        Character\n                    "
+                    "\n                        Nobody\n                    "
                   )
                 ]),
                 _vm._v(" "),
@@ -16692,6 +16692,8 @@ var render = function() {
                       _vm._v(
                         "\n                        " +
                           _vm._s(player) +
+                          " " +
+                          _vm._s(player === _vm.players[0] ? "(Me)" : "") +
                           "\n                    "
                       )
                     ]
@@ -16988,10 +16990,63 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
 
+var initialBox = {
+    state: -1,
+    1: false,
+    2: false,
+    3: false,
+    4: false,
+    5: false
+};
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "notebook",
     data: function data() {
@@ -17000,51 +17055,170 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
                 characters: {},
                 weapons: {},
                 places: {}
-            }
+            },
+            coordinates: {}
         };
     },
     created: function created() {
+        var _this = this;
+
         this.characters = __WEBPACK_IMPORTED_MODULE_1__Repository__["a" /* characters */];
         this.weapons = __WEBPACK_IMPORTED_MODULE_1__Repository__["c" /* weapons */];
         this.places = __WEBPACK_IMPORTED_MODULE_1__Repository__["b" /* places */];
         var that = this;
-        var boxState = {
-            state: -1,
-            1: false,
-            2: false,
-            3: false,
-            4: false,
-            5: false
-        };
+        var boxState = initialBox;
         this.characters.forEach(function (item) {
-            var row = that.table.characters[item] = {};
+            _this.$set(that.table.characters, item, {});
+            that.table.characters[item] = {};
             that.otherPlayersThanMyself.forEach(function (player) {
-                row[player] = boxState;
+                that.$set(that.table.characters[item], player, {});
+                that.table.characters[item][player] = Object.assign({}, boxState);
             });
         });
 
         this.weapons.forEach(function (item) {
-            var row = that.table.weapons[item] = {};
+            _this.$set(that.table.weapons, item, {});
+            that.table.weapons[item] = {};
             that.otherPlayersThanMyself.forEach(function (player) {
-                row[player] = boxState;
+                that.$set(that.table.weapons[item], player, {});
+                that.table.weapons[item][player] = Object.assign({}, boxState);
             });
         });
 
         this.places.forEach(function (item) {
-            var row = that.table.places[item] = {};
+            _this.$set(that.table.places, item, {});
+            that.table.places[item] = {};
             that.otherPlayersThanMyself.forEach(function (player) {
-                row[player] = boxState;
+                that.$set(that.table.places[item], player, {});
+                that.table.places[item][player] = Object.assign({}, boxState);
             });
         });
-    },
-    mounted: function mounted() {
-        this.$modal.show('options');
+        Bus.$on('question', function (payload) {
+            console.log('notebook question event', payload);
+            console.log('notebook question after event', _this.players[_this.currentPlayer]);
+            that.processQuestion(payload);
+        });
     },
 
-    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapGetters */])(['otherPlayersThanMyself', 'players', 'otherPlayersThanMyself'])),
+    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapGetters */])(['players', 'currentPlayer', 'otherPlayersThanMyself', 'myself'])),
     methods: {
-        showOptions: function showOptions() {
+        showOptions: function showOptions(coordinates) {
+            this.coordinates = coordinates;
             this.$modal.show('options');
+        },
+        clearSelectedBox: function clearSelectedBox() {
+            this.coordinates = {};
+        },
+        setLabel: function setLabel(option) {
+            var key = this.findKey();
+            if (!key) {
+                this.$modal.hide('options');
+                return;
+            }
+            var selectedPlayer = this.coordinates.player;
+
+            // this.$set(key, this.coordinates.player, box)
+            console.log(key[selectedPlayer]);
+            this.applyOption(option, key[selectedPlayer]);
+            console.log(key[selectedPlayer]);
+
+            if (option === 'v') {
+                this.applyTimesOptionToNeighborsOf(selectedPlayer, key);
+            }
+            this.$modal.hide('options');
+        },
+        applyTimesOptionToNeighborsOf: function applyTimesOptionToNeighborsOf(selectedPlayer, key) {
+            var _this2 = this;
+
+            var neighbors = this.otherPlayersThanMyself.filter(function (item) {
+                return item !== selectedPlayer;
+            });
+            neighbors.forEach(function (neighbor) {
+                _this2.applyOption('x', _this2.applyOption('r', key[neighbor]));
+            });
+        },
+        applyOption: function applyOption(option, box) {
+            switch (option) {
+                case 'x':
+                    box.state = false;
+                    return box;
+                case 'v':
+                    box.state = true;
+                    return box;
+                case '1':
+                    box[1] = !box[1];
+                    return box;
+                case '2':
+                    box[2] = !box[2];
+                    return box;
+                case '3':
+                    box[3] = !box[3];
+                    return box;
+                case '4':
+                    box[4] = !box[4];
+                    return box;
+                case '5':
+                    box[5] = !box[5];
+                    return box;
+                default:
+                    return Object.assign(box, initialBox);
+            }
+        },
+        otherPlayersWithout: function otherPlayersWithout(player) {
+            return this.otherPlayersThanMyself.filter(function (item) {
+                return item !== player;
+            });
+        },
+        findKey: function findKey(key) {
+            if (this.coordinates.hasOwnProperty('character')) {
+                return this.table.characters[this.coordinates.character];
+            } else if (this.coordinates.hasOwnProperty('weapon')) {
+                return this.table.weapons[this.coordinates.weapon];
+            } else if (this.coordinates.hasOwnProperty('place')) {
+                return this.table.places[this.coordinates.place];
+            }
+            return null;
+        },
+        getTableCategoryFor: function getTableCategoryFor(key) {
+            var table = this.table;
+            if (table.characters.hasOwnProperty(key)) {
+                return table.characters;
+            }
+            if (table.weapons.hasOwnProperty(key)) {
+                return table.weapons;
+            }
+            if (table.places.hasOwnProperty(key)) {
+                return table.places;
+            }
+        },
+        processQuestion: function processQuestion(question) {
+            var that = this;
+            var askedCards = [question.character, question.weapon, question.place];
+            // Case nobody answered
+            if (!question.who) {
+                // for( let key in Object.keys(this.table))
+                Object.keys(this.table).forEach(function (key) {
+                    // key in ['characters','weapons','places]
+                    var category = that.table[key];
+                    Object.keys(category).forEach(function (item) {
+                        //item in [...characters]
+                        if (askedCards.indexOf(item) >= 0) {
+                            console.log(category[item]);
+                            Object.keys(category[item]).forEach(function (player) {
+                                that.applyOption('x', category[item][player]);
+                            });
+                        }
+                        // category[player].state = false;
+                    });
+                });
+            } else
+                // Case someone answered and you know whit what
+                if (question.who !== this.myself && question.what) {
+                    var category = this.getTableCategoryFor(question.what);
+                    console.log(category[question.what][question.who]);
+                    this.applyOption('v', category[question.what][question.who]);
+                    this.applyTimesOptionToNeighborsOf(question.who, category[question.what]);
+                }
         }
     }
 });
@@ -17059,9 +17233,9 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "bg-mustard-lightest" },
+    { staticClass: "bg-mustard-lightest pb-6" },
     [
-      _c("div", { staticClass: "px-4" }, [
+      _c("div", { staticClass: "px-2" }, [
         _vm._m(0),
         _vm._v(" "),
         _vm._m(1),
@@ -17070,171 +17244,196 @@ var render = function() {
           _c(
             "div",
             { staticClass: "table w-full notebook" },
-            _vm._l(_vm.table.characters, function(players, character) {
-              return _c(
+            [
+              _c(
                 "div",
-                { staticClass: "table-row w-full text-left font-bold" },
+                {
+                  staticClass: "table-row w-full",
+                  staticStyle: { height: "20px" }
+                },
                 [
-                  _c("div", {
-                    staticClass: "table-cell w-2/5 pl-3 p-2 select-none ",
-                    domProps: { textContent: _vm._s(character) }
-                  }),
+                  _c("div", { staticClass: "table-cell w-2/5" }),
                   _vm._v(" "),
-                  _vm._l(players, function(box, player) {
-                    return _c(
-                      "div",
-                      {
-                        staticClass: "table-cell text-center text-xl relative"
-                      },
-                      [
-                        _c(
-                          "div",
-                          {
-                            staticClass: "flex flex-col h-full",
-                            on: { click: _vm.showOptions }
-                          },
-                          [
-                            _c(
-                              "div",
-                              {
-                                directives: [
-                                  {
-                                    name: "show",
-                                    rawName: "v-show",
-                                    value: box.state === false,
-                                    expression: "box.state === false"
-                                  }
-                                ],
-                                staticClass:
-                                  "flex-1 text-scarlet flex justify-center items-center text-3xl select-none"
-                              },
-                              [
-                                _vm._v(
-                                  "\n                                ✗\n                            "
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "div",
-                              {
-                                directives: [
-                                  {
-                                    name: "show",
-                                    rawName: "v-show",
-                                    value: box.state === true,
-                                    expression: "box.state === true"
-                                  }
-                                ],
-                                staticClass:
-                                  "flex-1 text-green flex justify-center items-center text-3xl select-none"
-                              },
-                              [
-                                _vm._v(
-                                  "\n                                ✓\n                            "
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "div",
-                              { staticClass: "absolute pin-b w-full" },
-                              [
-                                _c(
-                                  "div",
-                                  {
-                                    staticClass:
-                                      "numbers flex justify-around w-full select-none",
-                                    staticStyle: { "font-size": "9px" }
-                                  },
-                                  [
-                                    _c(
-                                      "div",
-                                      {
-                                        directives: [
-                                          {
-                                            name: "show",
-                                            rawName: "v-show",
-                                            value: box[1],
-                                            expression: "box[1]"
-                                          }
-                                        ]
-                                      },
-                                      [_vm._v("1")]
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "div",
-                                      {
-                                        directives: [
-                                          {
-                                            name: "show",
-                                            rawName: "v-show",
-                                            value: box[2],
-                                            expression: "box[2]"
-                                          }
-                                        ]
-                                      },
-                                      [_vm._v("2")]
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "div",
-                                      {
-                                        directives: [
-                                          {
-                                            name: "show",
-                                            rawName: "v-show",
-                                            value: box[3],
-                                            expression: "box[3]"
-                                          }
-                                        ]
-                                      },
-                                      [_vm._v("3")]
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "div",
-                                      {
-                                        directives: [
-                                          {
-                                            name: "show",
-                                            rawName: "v-show",
-                                            value: box[4],
-                                            expression: "box[4]"
-                                          }
-                                        ]
-                                      },
-                                      [_vm._v("4")]
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "div",
-                                      {
-                                        directives: [
-                                          {
-                                            name: "show",
-                                            rawName: "v-show",
-                                            value: box[5],
-                                            expression: "box[5]"
-                                          }
-                                        ]
-                                      },
-                                      [_vm._v("5")]
-                                    )
-                                  ]
-                                )
-                              ]
-                            )
-                          ]
-                        )
-                      ]
-                    )
+                  _vm._l(_vm.otherPlayersThanMyself, function(player) {
+                    return _c("div", {
+                      staticClass:
+                        "table-cell text-center text-sm tracking-wide notebook-box",
+                      staticStyle: { width: "75px" },
+                      domProps: { textContent: _vm._s(player.substring(0, 2)) }
+                    })
                   })
                 ],
                 2
-              )
-            })
+              ),
+              _vm._v(" "),
+              _vm._l(_vm.table.characters, function(players, character) {
+                return _c(
+                  "div",
+                  { staticClass: "table-row w-full text-left font-bold" },
+                  [
+                    _c("div", {
+                      staticClass: "table-cell pl-3 p-2 select-none ",
+                      domProps: { textContent: _vm._s(character) }
+                    }),
+                    _vm._v(" "),
+                    _vm._l(players, function(box, player) {
+                      return _c(
+                        "div",
+                        {
+                          staticClass:
+                            "table-cell text-center text-xl relative notebook-box",
+                          staticStyle: { width: "75px" }
+                        },
+                        [
+                          _c(
+                            "div",
+                            {
+                              staticClass: "flex flex-col h-full",
+                              on: {
+                                click: function($event) {
+                                  _vm.showOptions({
+                                    character: character,
+                                    player: player
+                                  })
+                                }
+                              }
+                            },
+                            [
+                              _c(
+                                "div",
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: box.state === false,
+                                      expression: "box.state === false"
+                                    }
+                                  ],
+                                  staticClass:
+                                    "flex-1 text-scarlet flex justify-center items-center text-3xl select-none"
+                                },
+                                [_c("i", { staticClass: "fa fa-times" })]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: box.state === true,
+                                      expression: "box.state === true"
+                                    }
+                                  ],
+                                  staticClass:
+                                    "flex-1 text-green flex justify-center items-center text-3xl select-none"
+                                },
+                                [_c("i", { staticClass: "fa fa-check" })]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                { staticClass: "absolute pin-b w-full" },
+                                [
+                                  _c(
+                                    "div",
+                                    {
+                                      staticClass:
+                                        "numbers flex justify-around w-full select-none",
+                                      staticStyle: { "font-size": "9px" }
+                                    },
+                                    [
+                                      _c(
+                                        "div",
+                                        {
+                                          directives: [
+                                            {
+                                              name: "show",
+                                              rawName: "v-show",
+                                              value: box[1],
+                                              expression: "box[1]"
+                                            }
+                                          ]
+                                        },
+                                        [_vm._v("1")]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "div",
+                                        {
+                                          directives: [
+                                            {
+                                              name: "show",
+                                              rawName: "v-show",
+                                              value: box[2],
+                                              expression: "box[2]"
+                                            }
+                                          ]
+                                        },
+                                        [_vm._v("2")]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "div",
+                                        {
+                                          directives: [
+                                            {
+                                              name: "show",
+                                              rawName: "v-show",
+                                              value: box[3],
+                                              expression: "box[3]"
+                                            }
+                                          ]
+                                        },
+                                        [_vm._v("3")]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "div",
+                                        {
+                                          directives: [
+                                            {
+                                              name: "show",
+                                              rawName: "v-show",
+                                              value: box[4],
+                                              expression: "box[4]"
+                                            }
+                                          ]
+                                        },
+                                        [_vm._v("4")]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "div",
+                                        {
+                                          directives: [
+                                            {
+                                              name: "show",
+                                              rawName: "v-show",
+                                              value: box[5],
+                                              expression: "box[5]"
+                                            }
+                                          ]
+                                        },
+                                        [_vm._v("5")]
+                                      )
+                                    ]
+                                  )
+                                ]
+                              )
+                            ]
+                          )
+                        ]
+                      )
+                    })
+                  ],
+                  2
+                )
+              })
+            ],
+            2
           )
         ]),
         _vm._v(" "),
@@ -17244,160 +17443,195 @@ var render = function() {
           _c(
             "div",
             { staticClass: "table w-full notebook" },
-            _vm._l(_vm.table.weapons, function(players, weapon) {
-              return _c(
+            [
+              _c(
                 "div",
-                { staticClass: "table-row w-full text-left font-bold" },
+                {
+                  staticClass: "table-row w-full",
+                  staticStyle: { height: "20px" }
+                },
                 [
-                  _c("div", {
-                    staticClass: "table-cell w-2/5 pl-3 p-2 select-none",
-                    domProps: { textContent: _vm._s(weapon) }
-                  }),
+                  _c("div", { staticClass: "table-cell w-2/5" }),
                   _vm._v(" "),
-                  _vm._l(players, function(box, player) {
-                    return _c(
-                      "div",
-                      {
-                        staticClass: "table-cell text-center text-xl relative"
-                      },
-                      [
-                        _c("div", { staticClass: "flex flex-col h-full" }, [
-                          _c(
-                            "div",
-                            {
-                              directives: [
-                                {
-                                  name: "show",
-                                  rawName: "v-show",
-                                  value: box.state === false,
-                                  expression: "box.state === false"
-                                }
-                              ],
-                              staticClass:
-                                "flex-1 text-scarlet flex justify-center items-center text-3xl select-none"
-                            },
-                            [
-                              _vm._v(
-                                "\n                                ✗\n                            "
-                              )
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            {
-                              directives: [
-                                {
-                                  name: "show",
-                                  rawName: "v-show",
-                                  value: box.state === true,
-                                  expression: "box.state === true"
-                                }
-                              ],
-                              staticClass:
-                                "flex-1 text-green flex justify-center items-center text-3xl select-none"
-                            },
-                            [
-                              _vm._v(
-                                "\n                                ✓\n                            "
-                              )
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "absolute pin-b w-full" }, [
-                            _c(
-                              "div",
-                              {
-                                staticClass:
-                                  "numbers flex justify-around w-full select-none",
-                                staticStyle: { "font-size": "9px" }
-                              },
-                              [
-                                _c(
-                                  "div",
-                                  {
-                                    directives: [
-                                      {
-                                        name: "show",
-                                        rawName: "v-show",
-                                        value: box[1],
-                                        expression: "box[1]"
-                                      }
-                                    ]
-                                  },
-                                  [_vm._v("1")]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "div",
-                                  {
-                                    directives: [
-                                      {
-                                        name: "show",
-                                        rawName: "v-show",
-                                        value: box[2],
-                                        expression: "box[2]"
-                                      }
-                                    ]
-                                  },
-                                  [_vm._v("2")]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "div",
-                                  {
-                                    directives: [
-                                      {
-                                        name: "show",
-                                        rawName: "v-show",
-                                        value: box[3],
-                                        expression: "box[3]"
-                                      }
-                                    ]
-                                  },
-                                  [_vm._v("3")]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "div",
-                                  {
-                                    directives: [
-                                      {
-                                        name: "show",
-                                        rawName: "v-show",
-                                        value: box[4],
-                                        expression: "box[4]"
-                                      }
-                                    ]
-                                  },
-                                  [_vm._v("4")]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "div",
-                                  {
-                                    directives: [
-                                      {
-                                        name: "show",
-                                        rawName: "v-show",
-                                        value: box[5],
-                                        expression: "box[5]"
-                                      }
-                                    ]
-                                  },
-                                  [_vm._v("5")]
-                                )
-                              ]
-                            )
-                          ])
-                        ])
-                      ]
-                    )
+                  _vm._l(_vm.otherPlayersThanMyself, function(player) {
+                    return _c("div", {
+                      staticClass:
+                        "table-cell text-center text-sm tracking-wide notebook-box",
+                      staticStyle: { width: "75px" },
+                      domProps: { textContent: _vm._s(player.substring(0, 2)) }
+                    })
                   })
                 ],
                 2
-              )
-            })
+              ),
+              _vm._v(" "),
+              _vm._l(_vm.table.weapons, function(players, weapon) {
+                return _c(
+                  "div",
+                  { staticClass: "table-row w-full text-left font-bold" },
+                  [
+                    _c("div", {
+                      staticClass: "table-cell w-2/5 pl-3 p-2 select-none",
+                      domProps: { textContent: _vm._s(weapon) }
+                    }),
+                    _vm._v(" "),
+                    _vm._l(players, function(box, player) {
+                      return _c(
+                        "div",
+                        {
+                          staticClass:
+                            "table-cell text-center text-xl relative notebook-box"
+                        },
+                        [
+                          _c(
+                            "div",
+                            {
+                              staticClass: "flex flex-col h-full",
+                              on: {
+                                click: function($event) {
+                                  _vm.showOptions({
+                                    weapon: weapon,
+                                    player: player
+                                  })
+                                }
+                              }
+                            },
+                            [
+                              _c(
+                                "div",
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: box.state === false,
+                                      expression: "box.state === false"
+                                    }
+                                  ],
+                                  staticClass:
+                                    "flex-1 text-scarlet flex justify-center items-center text-3xl select-none"
+                                },
+                                [_c("i", { staticClass: "fa fa-times" })]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: box.state === true,
+                                      expression: "box.state === true"
+                                    }
+                                  ],
+                                  staticClass:
+                                    "flex-1 text-green flex justify-center items-center text-3xl select-none"
+                                },
+                                [_c("i", { staticClass: "fa fa-check" })]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                { staticClass: "absolute pin-b w-full" },
+                                [
+                                  _c(
+                                    "div",
+                                    {
+                                      staticClass:
+                                        "numbers flex justify-around w-full select-none",
+                                      staticStyle: { "font-size": "9px" }
+                                    },
+                                    [
+                                      _c(
+                                        "div",
+                                        {
+                                          directives: [
+                                            {
+                                              name: "show",
+                                              rawName: "v-show",
+                                              value: box[1],
+                                              expression: "box[1]"
+                                            }
+                                          ]
+                                        },
+                                        [_vm._v("1")]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "div",
+                                        {
+                                          directives: [
+                                            {
+                                              name: "show",
+                                              rawName: "v-show",
+                                              value: box[2],
+                                              expression: "box[2]"
+                                            }
+                                          ]
+                                        },
+                                        [_vm._v("2")]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "div",
+                                        {
+                                          directives: [
+                                            {
+                                              name: "show",
+                                              rawName: "v-show",
+                                              value: box[3],
+                                              expression: "box[3]"
+                                            }
+                                          ]
+                                        },
+                                        [_vm._v("3")]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "div",
+                                        {
+                                          directives: [
+                                            {
+                                              name: "show",
+                                              rawName: "v-show",
+                                              value: box[4],
+                                              expression: "box[4]"
+                                            }
+                                          ]
+                                        },
+                                        [_vm._v("4")]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "div",
+                                        {
+                                          directives: [
+                                            {
+                                              name: "show",
+                                              rawName: "v-show",
+                                              value: box[5],
+                                              expression: "box[5]"
+                                            }
+                                          ]
+                                        },
+                                        [_vm._v("5")]
+                                      )
+                                    ]
+                                  )
+                                ]
+                              )
+                            ]
+                          )
+                        ]
+                      )
+                    })
+                  ],
+                  2
+                )
+              })
+            ],
+            2
           )
         ]),
         _vm._v(" "),
@@ -17407,248 +17641,339 @@ var render = function() {
           _c(
             "div",
             { staticClass: "table w-full notebook" },
-            _vm._l(_vm.table.places, function(players, place) {
-              return _c(
+            [
+              _c(
                 "div",
-                { staticClass: "table-row w-full text-left font-bold" },
+                {
+                  staticClass: "table-row w-full",
+                  staticStyle: { height: "20px" }
+                },
                 [
-                  _c("div", {
-                    staticClass: "table-cell w-2/5 pl-3 p-2 select-none",
-                    domProps: { textContent: _vm._s(place) }
-                  }),
+                  _c("div", { staticClass: "table-cell w-2/5" }),
                   _vm._v(" "),
-                  _vm._l(players, function(box, player) {
-                    return _c(
-                      "div",
-                      {
-                        staticClass: "table-cell text-center text-xl relative"
-                      },
-                      [
-                        _c("div", { staticClass: "flex flex-col h-full" }, [
-                          _c(
-                            "div",
-                            {
-                              directives: [
-                                {
-                                  name: "show",
-                                  rawName: "v-show",
-                                  value: box.state === false,
-                                  expression: "box.state === false"
-                                }
-                              ],
-                              staticClass:
-                                "flex-1 text-scarlet flex justify-center items-center text-3xl select-none"
-                            },
-                            [
-                              _vm._v(
-                                "\n                                ✗\n                            "
-                              )
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            {
-                              directives: [
-                                {
-                                  name: "show",
-                                  rawName: "v-show",
-                                  value: box.state === true,
-                                  expression: "box.state === true"
-                                }
-                              ],
-                              staticClass:
-                                "flex-1 text-green flex justify-center items-center text-3xl select-none"
-                            },
-                            [
-                              _vm._v(
-                                "\n                                ✓\n                            "
-                              )
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "absolute pin-b w-full" }, [
-                            _c(
-                              "div",
-                              {
-                                staticClass:
-                                  "numbers flex justify-around w-full select-none",
-                                staticStyle: { "font-size": "9px" }
-                              },
-                              [
-                                _c(
-                                  "div",
-                                  {
-                                    directives: [
-                                      {
-                                        name: "show",
-                                        rawName: "v-show",
-                                        value: box[1],
-                                        expression: "box[1]"
-                                      }
-                                    ]
-                                  },
-                                  [_vm._v("1")]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "div",
-                                  {
-                                    directives: [
-                                      {
-                                        name: "show",
-                                        rawName: "v-show",
-                                        value: box[2],
-                                        expression: "box[2]"
-                                      }
-                                    ]
-                                  },
-                                  [_vm._v("2")]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "div",
-                                  {
-                                    directives: [
-                                      {
-                                        name: "show",
-                                        rawName: "v-show",
-                                        value: box[3],
-                                        expression: "box[3]"
-                                      }
-                                    ]
-                                  },
-                                  [_vm._v("3")]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "div",
-                                  {
-                                    directives: [
-                                      {
-                                        name: "show",
-                                        rawName: "v-show",
-                                        value: box[4],
-                                        expression: "box[4]"
-                                      }
-                                    ]
-                                  },
-                                  [_vm._v("4")]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "div",
-                                  {
-                                    directives: [
-                                      {
-                                        name: "show",
-                                        rawName: "v-show",
-                                        value: box[5],
-                                        expression: "box[5]"
-                                      }
-                                    ]
-                                  },
-                                  [_vm._v("5")]
-                                )
-                              ]
-                            )
-                          ])
-                        ])
-                      ]
-                    )
+                  _vm._l(_vm.otherPlayersThanMyself, function(player) {
+                    return _c("div", {
+                      staticClass:
+                        "table-cell text-center text-sm tracking-wide notebook-box",
+                      staticStyle: { width: "75px" },
+                      domProps: { textContent: _vm._s(player.substring(0, 2)) }
+                    })
                   })
                 ],
                 2
-              )
-            })
+              ),
+              _vm._v(" "),
+              _vm._l(_vm.table.places, function(players, place) {
+                return _c(
+                  "div",
+                  { staticClass: "table-row w-full text-left font-bold" },
+                  [
+                    _c("div", {
+                      staticClass: "table-cell w-2/5 pl-3 p-2 select-none",
+                      domProps: { textContent: _vm._s(place) }
+                    }),
+                    _vm._v(" "),
+                    _vm._l(players, function(box, player) {
+                      return _c(
+                        "div",
+                        {
+                          staticClass:
+                            "table-cell text-center text-xl relative notebook-box"
+                        },
+                        [
+                          _c(
+                            "div",
+                            {
+                              staticClass: "flex flex-col h-full",
+                              on: {
+                                click: function($event) {
+                                  _vm.showOptions({
+                                    place: place,
+                                    player: player
+                                  })
+                                }
+                              }
+                            },
+                            [
+                              _c(
+                                "div",
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: box.state === false,
+                                      expression: "box.state === false"
+                                    }
+                                  ],
+                                  staticClass:
+                                    "flex-1 text-scarlet flex justify-center items-center text-3xl select-none"
+                                },
+                                [_c("i", { staticClass: "fa fa-times" })]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: box.state === true,
+                                      expression: "box.state === true"
+                                    }
+                                  ],
+                                  staticClass:
+                                    "flex-1 text-green flex justify-center items-center text-3xl select-none"
+                                },
+                                [_c("i", { staticClass: "fa fa-check" })]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                { staticClass: "absolute pin-b w-full" },
+                                [
+                                  _c(
+                                    "div",
+                                    {
+                                      staticClass:
+                                        "numbers flex justify-around w-full select-none",
+                                      staticStyle: { "font-size": "9px" }
+                                    },
+                                    [
+                                      _c(
+                                        "div",
+                                        {
+                                          directives: [
+                                            {
+                                              name: "show",
+                                              rawName: "v-show",
+                                              value: box[1],
+                                              expression: "box[1]"
+                                            }
+                                          ]
+                                        },
+                                        [_vm._v("1")]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "div",
+                                        {
+                                          directives: [
+                                            {
+                                              name: "show",
+                                              rawName: "v-show",
+                                              value: box[2],
+                                              expression: "box[2]"
+                                            }
+                                          ]
+                                        },
+                                        [_vm._v("2")]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "div",
+                                        {
+                                          directives: [
+                                            {
+                                              name: "show",
+                                              rawName: "v-show",
+                                              value: box[3],
+                                              expression: "box[3]"
+                                            }
+                                          ]
+                                        },
+                                        [_vm._v("3")]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "div",
+                                        {
+                                          directives: [
+                                            {
+                                              name: "show",
+                                              rawName: "v-show",
+                                              value: box[4],
+                                              expression: "box[4]"
+                                            }
+                                          ]
+                                        },
+                                        [_vm._v("4")]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "div",
+                                        {
+                                          directives: [
+                                            {
+                                              name: "show",
+                                              rawName: "v-show",
+                                              value: box[5],
+                                              expression: "box[5]"
+                                            }
+                                          ]
+                                        },
+                                        [_vm._v("5")]
+                                      )
+                                    ]
+                                  )
+                                ]
+                              )
+                            ]
+                          )
+                        ]
+                      )
+                    })
+                  ],
+                  2
+                )
+              })
+            ],
+            2
           )
         ])
       ]),
       _vm._v(" "),
-      _c("modal", { attrs: { name: "options", width: "200", height: "75" } }, [
-        _c("div", { staticClass: "relative flex flex-col h-full" }, [
-          _c(
-            "div",
-            {
-              staticClass: "flex bg-teal-lightest text-3xl font-bold",
-              staticStyle: { height: "45px" }
-            },
-            [
-              _c(
-                "div",
-                {
-                  staticClass:
-                    "cursor-pointer hover:bg-teal-light hover:text-white flex-1 border-r border-teal-light text-scarlet justify-center items-center flex"
-                },
-                [_vm._v("\n                    ✗\n                ")]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass:
-                    "cursor-pointer hover:bg-teal-light hover:text-white flex-1 border-l border-teal-light text-green justify-center items-center flex"
-                },
-                [_vm._v("\n                    ✓\n                ")]
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass:
-                "numbers flex-1 flex justify-between items-center w-full select-none text-xl bg-teal-light"
-            },
-            [
-              _c(
-                "div",
-                {
-                  staticClass:
-                    "cursor-pointer hover:bg-teal-lightest px-3 h-full flex justify-center items-center"
-                },
-                [_vm._v("1")]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass:
-                    "cursor-pointer hover:bg-teal-lightest bg-teal px-3 h-full flex justify-center items-center"
-                },
-                [_vm._v("2")]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass:
-                    "cursor-pointer hover:bg-teal-lightest px-3 h-full flex justify-center items-center"
-                },
-                [_vm._v("3")]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass:
-                    "cursor-pointer hover:bg-teal-lightest px-3 h-full flex justify-center items-center"
-                },
-                [_vm._v("4")]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass:
-                    "cursor-pointer hover:bg-teal-lightest px-3 h-full flex justify-center items-center"
-                },
-                [_vm._v("5")]
-              )
-            ]
-          )
-        ])
-      ])
+      _c(
+        "modal",
+        {
+          attrs: { name: "options", width: "200", height: "75" },
+          on: { closed: _vm.clearSelectedBox }
+        },
+        [
+          _c("div", { staticClass: "relative flex flex-col h-full" }, [
+            _c(
+              "div",
+              {
+                staticClass: "flex bg-teal-lightest text-1xl font-bold",
+                staticStyle: { height: "45px" }
+              },
+              [
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "cursor-pointer hover:bg-teal-light hover:text-white flex-1 border-r border-teal-light text-scarlet justify-center items-center flex",
+                    on: {
+                      click: function($event) {
+                        _vm.setLabel("x")
+                      }
+                    }
+                  },
+                  [_c("i", { staticClass: "fa fa-times" })]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "cursor-pointer hover:bg-teal-light hover:text-white flex-1 border-l border-teal-light text-green justify-center items-center flex",
+                    on: {
+                      click: function($event) {
+                        _vm.setLabel("v")
+                      }
+                    }
+                  },
+                  [_c("i", { staticClass: "fa fa-check" })]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "cursor-pointer hover:bg-teal-light hover:text-white flex-1 border-l border-teal-light text-green justify-center items-center flex",
+                    on: {
+                      click: function($event) {
+                        _vm.setLabel("r")
+                      }
+                    }
+                  },
+                  [_c("i", { staticClass: "fa fa-trash" })]
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass:
+                  "numbers flex-1 flex justify-between items-center w-full select-none text-xl bg-teal-light"
+              },
+              [
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "cursor-pointer hover:bg-teal-lightest px-3 h-full flex justify-center items-center",
+                    on: {
+                      click: function($event) {
+                        _vm.setLabel("1")
+                      }
+                    }
+                  },
+                  [_vm._v("\n                    1\n                ")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "cursor-pointer hover:bg-teal-lightest px-3 h-full flex justify-center items-center",
+                    on: {
+                      click: function($event) {
+                        _vm.setLabel("2")
+                      }
+                    }
+                  },
+                  [_vm._v("\n                    2\n                ")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "cursor-pointer hover:bg-teal-lightest px-3 h-full flex justify-center items-center",
+                    on: {
+                      click: function($event) {
+                        _vm.setLabel("3")
+                      }
+                    }
+                  },
+                  [_vm._v("\n                    3\n                ")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "cursor-pointer hover:bg-teal-lightest px-3 h-full flex justify-center items-center",
+                    on: {
+                      click: function($event) {
+                        _vm.setLabel("4")
+                      }
+                    }
+                  },
+                  [_vm._v("\n                    4\n                ")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "cursor-pointer hover:bg-teal-lightest px-3 h-full flex justify-center items-center",
+                    on: {
+                      click: function($event) {
+                        _vm.setLabel("5")
+                      }
+                    }
+                  },
+                  [_vm._v("\n                    5\n                ")]
+                )
+              ]
+            )
+          ])
+        ]
+      )
     ],
     1
   )
@@ -17740,11 +18065,14 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 
 
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */]);
+
 var storage = window.sessionStorage;
+
 var vuexLocal = new __WEBPACK_IMPORTED_MODULE_2_vuex_persist___default.a({
     storage: storage
 });
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */]);
+
 var initialState = {
     players: [],
     myCards: {
@@ -17791,21 +18119,18 @@ var mutations = {
     nextPlayer: function nextPlayer(state) {
         state.currentPlayer + 1 >= state.players.length ? state.currentPlayer = 0 : state.currentPlayer += 1;
     },
-    restartApp: function restartApp(state) {
-        console.log('restarting app...');
-        state = Object.assign({}, initialState);
+    RESET_STATE: function RESET_STATE(state) {
+        console.log(state);
         state.players = [];
         state.myCards = {
             characters: [],
             weapons: [],
             places: []
         };
-        state.firstPlayer = null;
-        state.currentPlayer = null;
+        state.firstPlayer = 0;
+        state.currentPlayer = 0;
         state.questions = [];
         state.gameStarted = false;
-        console.log(state);
-        console.log('app restarted');
     },
     startGame: function startGame(state) {
         state.gameStarted = true;
@@ -17824,29 +18149,36 @@ var actions = {
 
         commit('updatePlayers', players);
     },
-    restartApp: function restartApp(_ref4) {
+    step: function step(_ref4) {
         var commit = _ref4.commit;
-
-        window.localStorage.clear('vuex');
-        commit('restartApp');
-    },
-    step: function step(_ref5) {
-        var commit = _ref5.commit;
 
         commit('nextPlayer');
     },
-    START_GAME: function START_GAME(_ref6) {
-        var commit = _ref6.commit;
+    START_GAME: function START_GAME(_ref5) {
+        var commit = _ref5.commit;
 
         commit('startGame');
+    },
+    RESTART_APP: function RESTART_APP(_ref6) {
+        var commit = _ref6.commit;
+
+        console.log('restarting app...');
+        commit('RESET_STATE');
+        console.log('app restarted');
     }
 };
 var getters = {
     players: function players(state) {
         return state.players;
     },
+    myself: function myself(state) {
+        return state.players[0];
+    },
     firstPlayer: function firstPlayer(state) {
         return state.firstPlayer;
+    },
+    firstPlayerName: function firstPlayerName(state) {
+        return state.players[state.firstPlayer];
     },
     currentPlayer: function currentPlayer(_ref7) {
         var _currentPlayer = _ref7.currentPlayer;
@@ -38275,6 +38607,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -38297,7 +38634,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             Bus.$emit('next-step');
         },
         restartApp: function restartApp() {
-            window.sessionStorage.removeItem('vuex');
             Bus.$emit('restart');
         },
         toggleNotebook: function toggleNotebook() {
@@ -38343,18 +38679,52 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "w-1/5 text-xl" }, [
-              _vm.$store.state.gameStarted
-                ? _c("i", {
-                    staticClass: "fa fa-sticky-note",
-                    on: {
-                      click: function($event) {
-                        _vm.toggleNotebook()
-                      }
-                    }
-                  })
-                : _vm._e()
-            ])
+            _c(
+              "div",
+              { staticClass: "w-1/5 text-xl" },
+              [
+                _vm.$store.state.gameStarted
+                  ? [
+                      _c(
+                        "span",
+                        {
+                          on: {
+                            click: function($event) {
+                              _vm.toggleNotebook()
+                            }
+                          }
+                        },
+                        [
+                          _c("i", {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: !_vm.displayNotebook,
+                                expression: "!displayNotebook"
+                              }
+                            ],
+                            staticClass: "fa fa-sticky-note"
+                          }),
+                          _vm._v(" "),
+                          _c("i", {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: _vm.displayNotebook,
+                                expression: "displayNotebook"
+                              }
+                            ],
+                            staticClass: "fa fa-times"
+                          })
+                        ]
+                      )
+                    ]
+                  : _vm._e()
+              ],
+              2
+            )
           ])
         ]
       ),
@@ -38515,16 +38885,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     beforeMount: function beforeMount() {
-        if (this.preSelected.length && this.preSelected[0] !== null) {
-            this.selected = this.preSelected;
-        }
-    },
-    data: function data() {
-        return {
-            selected: []
-        };
+        // if (this.preSelected.length && this.preSelected[0] !== null) {
+        //     this.selected = this.preSelected
+        // }
     },
 
+    computed: {
+        selected: function selected() {
+            return this.preSelected;
+        }
+    },
     methods: {
         toggle: function toggle(item) {
             var index = this.selected.indexOf(item);
@@ -38536,7 +38906,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }
             } else {
                 if (index < 0) {
-                    this.selected = [item];
                     this.$emit('select', item);
                 }
             }

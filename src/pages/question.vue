@@ -96,7 +96,7 @@
                                 value=""
                                 class="py-6"
                         >
-                            Character
+                            Nobody
                         </option>
                         <option
                                 :value="player"
@@ -104,7 +104,7 @@
                                 v-for="(player,index) in otherPlayersThanCurrent"
                                 :key="index"
                         >
-                            {{player}}
+                            {{player}} {{ (player === players[0] ? '(Me)':'')}}
                         </option>
                     </select>
                     <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 mr-3 text-grey-lightest">
@@ -195,9 +195,8 @@
         },
         methods: {
             nextQuestion() {
-                Bus.$emit('question', this.question);
+                Bus.$emit('question', {asker: this.players[this.currentPlayer], ...this.question});
                 Bus.$emit('step');
-
                 this.question = {
                     character: '',
                     weapon: '',

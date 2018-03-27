@@ -2,11 +2,14 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import VuexPersistence from 'vuex-persist';
 
+Vue.use(Vuex);
+
 let storage = window.sessionStorage;
+
 const vuexLocal = new VuexPersistence({
     storage,
-})
-Vue.use(Vuex)
+});
+
 const initialState = {
     players: [],
     myCards: {
@@ -44,7 +47,7 @@ const mutations = {
         state.myCards.places = [...data];
     },
     updateFirstPlayer(state, player) {
-        let index = state.players.indexOf(player)
+        let index = state.players.indexOf(player);
         state.firstPlayer = index;
         state.currentPlayer = index;
     },
@@ -54,21 +57,18 @@ const mutations = {
             :
             state.currentPlayer += 1;
     },
-    restartApp(state) {
-        console.log('restarting app...');
-        state = Object.assign({},initialState)
+    RESET_STATE(state) {
+        console.log(state);
         state.players = [];
         state.myCards = {
             characters: [],
             weapons: [],
             places: [],
         };
-        state.firstPlayer = null;
-        state.currentPlayer = null;
+        state.firstPlayer = 0;
+        state.currentPlayer = 0;
         state.questions = [];
         state.gameStarted = false;
-        console.log(state)
-        console.log('app restarted');
     },
     startGame(state) {
         state.gameStarted = true;
@@ -83,22 +83,25 @@ const actions = {
     updatePlayers({commit}, players) {
         commit('updatePlayers', players)
     },
-    restartApp({commit}) {
-        window.localStorage.clear('vuex');
-        commit('restartApp');
-    },
     step({commit}) {
         commit('nextPlayer');
     },
     START_GAME({commit}) {
         commit('startGame');
-    }
+    },
+    RESTART_APP({commit}) {
+        console.log('restarting app...');
+        commit('RESET_STATE');
+        console.log('app restarted');
+    },
 };
 const getters = {
     players: state => {
         return state.players
     },
+    myself: state => state.players[0],
     firstPlayer: state => state.firstPlayer,
+    firstPlayerName: state => state.players[state.firstPlayer],
     currentPlayer:({currentPlayer}) => {
         return currentPlayer;
     },

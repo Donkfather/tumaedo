@@ -7,7 +7,8 @@
             </p>
         </div>
         <div slot="content" class="pt-8 ">
-            <list-simple class="font-bold" :items="players" :pre-selected="[firstPlayer]" @select="updateFirstPlayer"></list-simple>
+            <list-simple class="font-bold" :items="players" :pre-selected="[firstPlayerName]"
+                         @select="updateFirstPlayer"></list-simple>
         </div>
         <div slot="buttons">
             <v-button text="Start Game" @click="startGame()" ></v-button>
@@ -21,7 +22,7 @@
     export default {
         name: "first-player",
         computed: {
-            ...mapGetters(['players','firstPlayer'])
+            ...mapGetters(['players', 'firstPlayerName'])
         },
         methods: {
             nextState() {
