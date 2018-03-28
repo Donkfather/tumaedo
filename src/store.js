@@ -21,14 +21,15 @@ const initialState = {
     currentPlayer: 0,
     questions: [],
     table: [],
+    version: '0.1',
     gameStarted: false,
 };
 
 const state = Object.assign({}, initialState);
 
 const mutations = {
-    UPDATE_TABLE(state,table){
-        console.log('table updated',table);
+    UPDATE_TABLE(state, table) {
+        console.log('table updated', table);
         state.table[0] = table
     },
     updatePlayers(state, data) {
@@ -74,6 +75,7 @@ const mutations = {
         state.currentPlayer = 0;
         state.questions = [];
         state.table = [];
+        state.version = initialState.version;
         state.gameStarted = false;
     },
     startGame(state) {
@@ -105,14 +107,14 @@ const getters = {
     players: state => {
         return state.players
     },
-    table: state => state.table[0],
+    table: state => state.table[0] || {},
     myself: state => state.players[0],
     firstPlayer: state => state.firstPlayer,
     firstPlayerName: state => state.players[state.firstPlayer],
-    currentPlayer:({currentPlayer}) => {
+    currentPlayer: ({currentPlayer}) => {
         return currentPlayer;
     },
-    currentPlayerName:({players, currentPlayer}) => {
+    currentPlayerName: ({players, currentPlayer}) => {
         return players[currentPlayer] || "";
     },
     flatCards: ({myCards}) => {
@@ -120,12 +122,12 @@ const getters = {
     },
     myCards: state => state.myCards,
     otherPlayersThanMyself: state => {
-        return state.players.filter((item,index)=>{
+        return state.players.filter((item, index) => {
             return index > 0;
         })
     },
     otherPlayersThanCurrent: state => {
-        return state.players.filter((item,index)=>{
+        return state.players.filter((item, index) => {
             return index !== state.currentPlayer
         });
     }

@@ -8,7 +8,12 @@
 
         <div slot="content">
             <div class="text-2xl mb-6">
-                About what did <span class="font-bold text-">{{currentPlayerName}}</span> asked ?
+                <span v-if="currentPlayer === 0">
+                    About what are <span class="font-bold">you</span> asking?
+                </span>
+                <span v-if="currentPlayer !== 0">
+                About what is <span class="font-bold">{{currentPlayerName}}</span> asking ?
+                </span>
             </div>
             <div class="justify-between flex flex-col sm:flex-row mb-6 -mx-2">
                 <div class="relative md:w-1/3 sm:w-full px-2 mb-4 sm:mb-0">
@@ -190,7 +195,7 @@
             currentPlayerName() {
                 return this.players[this.currentPlayer]
             },
-            ...mapGetters(['currentPlayer', 'flatCards','players','questions','myCards','otherPlayersThanCurrent']),
+            ...mapGetters(['currentPlayer', 'flatCards', 'players', 'questions', 'myCards', 'otherPlayersThanCurrent']),
 
         },
         methods: {

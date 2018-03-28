@@ -164,6 +164,7 @@
             this.$watch('table', () => {
                 console.log('table update');
                 this.$store.commit('UPDATE_TABLE', this.table);
+                this.$emit('updated')
             }, {deep: true})
         },
         computed: {
