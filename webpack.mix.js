@@ -26,7 +26,7 @@ mix.options({
     postCss: [tailwindcss('./tailwindcss.js')],
     publicPath: 'dist',
 });
-mix.js('src/app.js', 'dist/').sass('src/app.scss', 'dist/');
+mix.js('src/app.js', 'dist/').sass('src/app.scss', 'dist/').sourceMaps();
 
 // Full API
 // mix.js(src, output);

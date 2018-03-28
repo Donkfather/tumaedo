@@ -20,6 +20,7 @@ Vue.component('app-layout', require('./components/App'));
 Vue.component('list-simple', require('./components/ListSimple'));
 Vue.component('nav-buttons', require('./components/navButtons'));
 Vue.component('v-button', require('./components/button'));
+Vue.component('box', require('./components/box'));
 
 const routes = [
     {path: '/', component: Welcome},

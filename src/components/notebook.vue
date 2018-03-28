@@ -19,26 +19,7 @@
                         <div class="table-cell pl-3 p-2 select-none " v-text="character"></div>
                         <div class="table-cell text-center text-xl relative notebook-box" style="width:75px;"
                              v-for="(box,player) in players">
-                            <div class="flex flex-col h-full" @click="showOptions({character, player})">
-                                <div v-show="box.state === false"
-                                     class="flex-1 text-scarlet flex justify-center items-center text-3xl select-none">
-                                    <i class="fa fa-times"></i>
-                                </div>
-                                <div v-show="box.state === true"
-                                     class="flex-1 text-green flex justify-center items-center text-3xl select-none">
-                                    <i class="fa fa-check"></i>
-                                </div>
-                                <div class="absolute pin-b w-full">
-
-                                    <div class="numbers flex justify-around w-full select-none" style="font-size: 9px;">
-                                        <div v-show="box[1]">1</div>
-                                        <div v-show="box[2]">2</div>
-                                        <div v-show="box[3]">3</div>
-                                        <div v-show="box[4]">4</div>
-                                        <div v-show="box[5]">5</div>
-                                    </div>
-                                </div>
-                            </div>
+                            <box :coordinates="{item: character,player}" :box="box" @options="showOptions"/>
                         </div>
                     </div>
                 </div>
@@ -57,26 +38,7 @@
                         <div class="table-cell w-2/5 pl-3 p-2 select-none" v-text="weapon"></div>
                         <div class="table-cell text-center text-xl relative notebook-box"
                              v-for="(box,player) in players">
-                            <div class="flex flex-col h-full" @click="showOptions({weapon, player})">
-                                <div v-show="box.state === false"
-                                     class="flex-1 text-scarlet flex justify-center items-center text-3xl select-none">
-                                    <i class="fa fa-times"></i>
-                                </div>
-                                <div v-show="box.state === true"
-                                     class="flex-1 text-green flex justify-center items-center text-3xl select-none">
-                                    <i class="fa fa-check"></i>
-                                </div>
-                                <div class="absolute pin-b w-full">
-
-                                    <div class="numbers flex justify-around w-full select-none" style="font-size: 9px;">
-                                        <div v-show="box[1]">1</div>
-                                        <div v-show="box[2]">2</div>
-                                        <div v-show="box[3]">3</div>
-                                        <div v-show="box[4]">4</div>
-                                        <div v-show="box[5]">5</div>
-                                    </div>
-                                </div>
-                            </div>
+                            <box :coordinates="{item: weapon,player}" :box="box" @options="showOptions"/>
                         </div>
                     </div>
                 </div>
@@ -95,26 +57,7 @@
                         <div class="table-cell w-2/5 pl-3 p-2 select-none" v-text="place"></div>
                         <div class="table-cell text-center text-xl relative notebook-box"
                              v-for="(box,player) in players">
-                            <div class="flex flex-col h-full" @click="showOptions({place, player})">
-                                <div v-show="box.state === false"
-                                     class="flex-1 text-scarlet flex justify-center items-center text-3xl select-none">
-                                    <i class="fa fa-times"></i>
-                                </div>
-                                <div v-show="box.state === true"
-                                     class="flex-1 text-green flex justify-center items-center text-3xl select-none">
-                                    <i class="fa fa-check"></i>
-                                </div>
-                                <div class="absolute pin-b w-full">
-
-                                    <div class="numbers flex justify-around w-full select-none" style="font-size: 9px;">
-                                        <div v-show="box[1]">1</div>
-                                        <div v-show="box[2]">2</div>
-                                        <div v-show="box[3]">3</div>
-                                        <div v-show="box[4]">4</div>
-                                        <div v-show="box[5]">5</div>
-                                    </div>
-                                </div>
-                            </div>
+                            <box :coordinates="{item: place,player}" :box="box" @options="showOptions"/>
                         </div>
                     </div>
                 </div>
@@ -173,6 +116,7 @@
         3: false,
         4: false,
         5: false,
+        blocked: false
     };
     export default {
         name: "notebook",
@@ -187,45 +131,75 @@
             }
         },
         created() {
-            this.characters = characters;
-            this.weapons = weapons;
-            this.places = places;
+
+            this.repository = {
+                characters,
+                weapons,
+                places,
+            };
+
             let that = this;
             let boxState = initialBox;
-            this.characters.forEach(item => {
-                this.$set(that.table.characters, item, {});
-                that.table.characters[item] = {};
-                that.otherPlayersThanMyself.forEach(player => {
-                    that.$set(that.table.characters[item], player, {});
-                    that.table.characters[item][player] = Object.assign({}, boxState);
-                })
-            });
-
-            this.weapons.forEach(item => {
-                this.$set(that.table.weapons, item, {});
-                that.table.weapons[item] = {};
-                that.otherPlayersThanMyself.forEach(player => {
-                    that.$set(that.table.weapons[item], player, {});
-                    that.table.weapons[item][player] = Object.assign({}, boxState);
-                })
-            });
-
-            this.places.forEach(item => {
-                this.$set(that.table.places, item, {});
-                that.table.places[item] = {};
-                that.otherPlayersThanMyself.forEach(player => {
-                    that.$set(that.table.places[item], player, {});
-                    that.table.places[item][player] = Object.assign({}, boxState);
-                })
-            });
+            Object.keys(this.repository).forEach(category => {
+                this.repository[category].forEach(item => {
+                    that.$set(that.table[category], item, {});
+                    let box = Object.assign({}, boxState);
+                    if (that.myCards[category].includes(item)) {
+                        box.blocked = true;
+                    }
+                    that.otherPlayersThanMyself.forEach(player => {
+                        that.$set(that.table[category][item], player, {});
+                        that.table[category][item][player] = Object.assign({}, box);
+                    })
+                });
+            })
+            if (this.$store.state.table[0] && this.$store.state.gameStarted) {
+                console.log('table retrieve', this.$store.state.table)
+                this.table = this.$store.state.table[0];
+            }
             Bus.$on('question', payload => {
                 console.log('notebook question event', payload);
-                console.log('notebook question after event', this.players[this.currentPlayer]);
                 that.processQuestion(payload);
             });
+            this.$watch('table', () => {
+                console.log('table update');
+                this.$store.commit('UPDATE_TABLE', this.table);
+            }, {deep: true})
         },
         computed: {
-            ...mapGetters(['players', 'currentPlayer', 'otherPlayersThanMyself', 'myself']),
+            ...mapGetters(['players', 'currentPlayer', 'otherPlayersThanMyself', 'myself', 'myCards', 'flatCards']),
+            perPlayerCards() {
+                let players = this.otherPlayersThanMyself;
+                let result = {};
+                _.each(players, player => {
+                    result[player] = {
+                        has: [],
+                        hasnt: [],
+                        unknown: []
+                    }
+                });
+                _.each(this.flatTable, (item, itemName) => {
+                    _.each(item, (player, playerName) => {
+                        if (player.state === true) {
+                            result[playerName]['has'].push(itemName)
+                        } else if(player.state === false){
+                            result[playerName]['hasnt'].push(itemName)
+                        } else {
+                            result[playerName]['unknown'].push(itemName)
+                        }
+                    })
+                })
+                return result;
+            },
+            flatTable() {
+                let result = {};
+                _.each(this.table, (category) => {
+                    _.each(category, (item, itemName) => {
+                        result[itemName] = item
+                    })
+                })
+                return result;
+            }
         },
         methods: {
             showOptions(coordinates) {
@@ -236,21 +210,19 @@
                 this.coordinates = {};
             },
             setLabel(option) {
-                let key = this.findKey();
-                if (!key) {
+                let coordinates = this.coordinates;
+                let tableCategory = this.getTableCategoryFor(coordinates.item)[coordinates.item];
+                if (!tableCategory) {
                     this.$modal.hide('options');
                     return;
                 }
-                let selectedPlayer = this.coordinates.player;
-
-                // this.$set(key, this.coordinates.player, box)
-                console.log(key[selectedPlayer]);
-                this.applyOption(option, key[selectedPlayer]);
-                console.log(key[selectedPlayer]);
+                // this.$set(category, this.coordinates.player, box)
+                this.applyOption(option, tableCategory[coordinates.player]);
 
                 if (option === 'v') {
-                    this.applyTimesOptionToNeighborsOf(selectedPlayer, key);
+                    this.applyTimesOptionToNeighborsOf(coordinates.player, tableCategory);
                 }
+
                 this.$modal.hide('options')
             },
             applyTimesOptionToNeighborsOf(selectedPlayer, key) {
@@ -289,32 +261,17 @@
             otherPlayersWithout(player) {
                 return this.otherPlayersThanMyself.filter(item => item !== player)
             },
-            findKey(key) {
-                if (this.coordinates.hasOwnProperty('character')) {
-                    return this.table.characters[this.coordinates.character];
-                } else if (this.coordinates.hasOwnProperty('weapon')) {
-                    return this.table.weapons[this.coordinates.weapon];
-                } else if (this.coordinates.hasOwnProperty('place')) {
-                    return this.table.places[this.coordinates.place];
-                }
-                return null;
-            },
             getTableCategoryFor(key) {
                 let table = this.table;
-                if (table.characters.hasOwnProperty(key)) {
-                    return table.characters;
-                }
-                if (table.weapons.hasOwnProperty(key)) {
-                    return table.weapons;
-                }
-                if (table.places.hasOwnProperty(key)) {
-                    return table.places;
-                }
+                let category = (Object.keys(table).filter(category => {
+                    return table[category].hasOwnProperty(key)
+                }));
+                return table[category];
             },
             processQuestion(question) {
                 let that = this;
                 let askedCards = [question.character, question.weapon, question.place];
-                // Case nobody answered
+                // Case 1
                 if (!question.who) {
                     // for( let key in Object.keys(this.table))
                     Object.keys(this.table).forEach(key => {
@@ -322,24 +279,35 @@
                         let category = that.table[key];
                         Object.keys(category).forEach(item => {
                             //item in [...characters]
-                            if (askedCards.indexOf(item) >= 0) {
-                                console.log(category[item]);
+                            if (askedCards.indexOf(item) >= 0 && that.flatCards.indexOf(item) < 0) {
                                 Object.keys(category[item]).forEach(player => {
-                                    that.applyOption('x', category[item][player])
+                                    if (!player.blocked) {
+                                        that.applyOption('x', category[item][player])
+                                    }
                                 })
                             }
-                            // category[player].state = false;
                         })
                     })
                 } else
-                // Case someone answered and you know whit what
+                // case 2
                 if (question.who !== this.myself && question.what) {
                     let category = this.getTableCategoryFor(question.what);
                     console.log(category[question.what][question.who]);
                     this.applyOption('v', category[question.what][question.who]);
                     this.applyTimesOptionToNeighborsOf(question.who, category[question.what])
+                } else
+                // Case 3
+                if (question.who && question.who !== this.myself && _.intersection(askedCards,this.perPlayerCards[question.who].hasnt).length === 2) {
+                    let magicCard = _.intersection(askedCards,this.perPlayerCards[question.who].unknown)[0];
+                    let key = this.getTableCategoryFor(magicCard)[magicCard]
+                    this.applyOption('v',key[question.who]);
+                    this.applyTimesOptionToNeighborsOf(question.who,key)
                 }
             }
         }
     }
+    // 1. nu raspunde nimeni => se pune X la toate inafara de cartile mele
+    // 2. eu intreb si cineva raspune si cunosc cartea => se pune bifa si x la restul de pe rand
+    // 3. cineva raspunde la o intrebare si nu are 2 din 3 carti => se pune v la a 3-a
+    //
 </script>

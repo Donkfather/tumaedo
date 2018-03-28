@@ -8,7 +8,7 @@
 
         <div slot="content">
             <div class="text-2xl mb-6">
-                About what did {{currentPlayerName}} asked ?
+                About what did <span class="font-bold text-">{{currentPlayerName}}</span> asked ?
             </div>
             <div class="justify-between flex flex-col sm:flex-row mb-6 -mx-2">
                 <div class="relative md:w-1/3 sm:w-full px-2 mb-4 sm:mb-0">

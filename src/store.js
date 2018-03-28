@@ -20,12 +20,17 @@ const initialState = {
     firstPlayer: 0,
     currentPlayer: 0,
     questions: [],
+    table: [],
     gameStarted: false,
 };
 
 const state = Object.assign({}, initialState);
 
 const mutations = {
+    UPDATE_TABLE(state,table){
+        console.log('table updated',table);
+        state.table[0] = table
+    },
     updatePlayers(state, data) {
         state.players = [...data];
     },
@@ -68,6 +73,7 @@ const mutations = {
         state.firstPlayer = 0;
         state.currentPlayer = 0;
         state.questions = [];
+        state.table = [];
         state.gameStarted = false;
     },
     startGame(state) {
@@ -99,6 +105,7 @@ const getters = {
     players: state => {
         return state.players
     },
+    table: state => state.table[0],
     myself: state => state.players[0],
     firstPlayer: state => state.firstPlayer,
     firstPlayerName: state => state.players[state.firstPlayer],
