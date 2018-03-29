@@ -27,7 +27,7 @@ mix.options({
     publicPath: 'dist',
 });
 if(mix.inProduction()){
-    mix.js('src/app.js', 'dist/').sass('src/app.scss', 'dist/').minify('dist/app.js','dist/app.css')
+    mix.js('src/app.js', 'dist/').sass('src/app.scss', 'dist/').minify('dist/app.js').minify('dist/app.css')
 } else {
     mix.js('src/app.js', 'dist/').sass('src/app.scss', 'dist/').sourceMaps();
 }
