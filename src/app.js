@@ -9,6 +9,12 @@ import Notebook from './components/notebook.vue'
 import {mapGetters} from 'vuex';
 import store from './store';
 import VModal from 'vue-js-modal'
+import VueAnalytics from 'vue-analytics'
+
+Vue.use(VueAnalytics, {
+    id: 'UA-35194059-9',
+    checkDuplicatedScript: true
+})
 
 Vue.use(VModal);
 Vue.use(VueRouter);
