@@ -130,7 +130,8 @@ const getters = {
         return state.players.filter((item, index) => {
             return index !== state.currentPlayer
         });
-    }
+    },
+    questions: state => state.questions
 };
 
 
