@@ -152,7 +152,7 @@
                         @click="nextQuestion()">Next</button>
             </div>
             <hr>
-            {{questions.reverse()}}
+            {{reversedQuestions}}
         </div>
     </app-layout>
 </template>
@@ -200,7 +200,9 @@
                 return this.players[this.currentPlayer]
             },
             ...mapGetters(['currentPlayer', 'flatCards', 'players', 'questions', 'myCards', 'otherPlayersThanCurrent']),
-
+            reversedQuestions(){
+                return _.reverse(this.questions)
+            }
         },
         methods: {
             nextQuestion() {
