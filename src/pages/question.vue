@@ -148,7 +148,6 @@
             </div>
             <div class="w-full">
                 <button class="w-full btn btn-peacock"
-                        :disabled="{'disabled': !(question.character && question.place && question.weapon)}"
                         @click="nextQuestion()">Next</button>
             </div>
             <hr>
