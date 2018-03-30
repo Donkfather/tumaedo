@@ -183,7 +183,7 @@
                     _.each(item, (player, playerName) => {
                         if (player.state === true) {
                             result[playerName]['has'].push(itemName)
-                        } else if(player.state === false){
+                        } else if (player.state === false) {
                             result[playerName]['hasnt'].push(itemName)
                         } else {
                             result[playerName]['unknown'].push(itemName)
@@ -289,20 +289,54 @@
                             }
                         })
                     })
-                } else
+                }
                 // case 2
-                if (question.who !== this.myself && question.what) {
+                if (question.who && question.who !== this.myself && question.what) {
                     let category = this.getTableCategoryFor(question.what);
-                    console.log(category[question.what][question.who]);
                     this.applyOption('v', category[question.what][question.who]);
                     this.applyTimesOptionToNeighborsOf(question.who, category[question.what])
-                } else
+                }
                 // Case 3
-                if (question.who && question.who !== this.myself && _.intersection(askedCards,this.perPlayerCards[question.who].hasnt).length === 2) {
-                    let magicCard = _.intersection(askedCards,this.perPlayerCards[question.who].unknown)[0];
+                if (question.who && question.who !== this.myself &&
+                    _.intersection(askedCards, this.perPlayerCards[question.who].hasnt).length === 2
+                ) {
+                    let magicCard = _.intersection(askedCards, this.perPlayerCards[question.who].unknown)[0];
                     let key = this.getTableCategoryFor(magicCard)[magicCard]
-                    this.applyOption('v',key[question.who]);
-                    this.applyTimesOptionToNeighborsOf(question.who,key)
+                    this.applyOption('v', key[question.who]);
+                    this.applyTimesOptionToNeighborsOf(question.who, key)
+                }
+                if (question.who && question.asker) {
+                    let whoIndex = this.players.indexOf(question.who);
+                    let askerIndex = this.players.indexOf(question.asker);
+                    let clueless = [];
+                    console.log(whoIndex,askerIndex)
+                    if (whoIndex > askerIndex) {
+                        this.players.forEach((player, index) => {
+                            if (index < whoIndex && index > askerIndex) {
+                                clueless.push(player)
+                            }
+                        })
+                    } else {
+                        this.players.forEach((player, index) => {
+                            if (
+                                (index <= this.players.length - 1 && index > askerIndex) ||
+                                (index >= this.players.length - 1 && index < whoIndex)
+                            ) {
+                                clueless.push(player)
+                            }
+                        })
+                    }
+                    if(clueless.indexOf(this.myself)>=0){
+                        clueless.splice(clueless.indexOf(this.myself),1);
+                    }
+                    ['character','weapon','place'].forEach(category => {
+                        let key = this.getTableCategoryFor(question[category])[question[category]]
+                        clueless.forEach(player => {
+                            console.log(key,key[player])
+                            this.applyOption('x',key[player])
+                        })
+                    })
+
                 }
             }
         }
