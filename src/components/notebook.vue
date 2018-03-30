@@ -297,46 +297,56 @@
                     this.applyTimesOptionToNeighborsOf(question.who, category[question.what])
                 }
                 // Case 3
-                if (question.who && question.who !== this.myself &&
-                    _.intersection(askedCards, this.perPlayerCards[question.who].hasnt).length === 2
+                if (
+                    question.who && question.who !== this.myself &&
+                    _.intersection(askedCards, [...this.perPlayerCards[question.who].hasnt,...this.flatCards]).length === 2
                 ) {
                     let magicCard = _.intersection(askedCards, this.perPlayerCards[question.who].unknown)[0];
                     let key = this.getTableCategoryFor(magicCard)[magicCard]
                     this.applyOption('v', key[question.who]);
                     this.applyTimesOptionToNeighborsOf(question.who, key)
                 }
+                //case 4
                 if (question.who && question.asker) {
-                    let whoIndex = this.players.indexOf(question.who);
+                    let answererIndex = this.players.indexOf(question.who);
                     let askerIndex = this.players.indexOf(question.asker);
+                    let lastIndex = this.players.length - 1;
                     let clueless = [];
-                    console.log(whoIndex,askerIndex)
-                    if (whoIndex > askerIndex) {
-                        this.players.forEach((player, index) => {
-                            if (index < whoIndex && index > askerIndex) {
-                                clueless.push(player)
+                    let noClue = (
+                        (askerIndex + 1 < lastIndex && askerIndex + 1 === answererIndex) ||
+                        (askerIndex === lastIndex && answererIndex === 0)
+                    );
+                    if(!noClue){
+                        if (answererIndex > askerIndex) {
+                            this.players.forEach((player, index) => {
+                                if (index > askerIndex && index < answererIndex) {
+                                    clueless.push(player)
+                                }
+                            })
+                        } else if (answererIndex < askerIndex){
+                            this.players.forEach((player, index) => {
+                                if (
+                                    (index <= this.players.length - 1 && index > askerIndex) ||
+                                    (index >= 0 && index < answererIndex)
+                                ) {
+                                    clueless.push(player)
+                                }
+                            })
+                        }
+                        // Mark all clueless people if there are any
+                        if(clueless.length){
+                            clueless = _.uniq(clueless);
+                            if (clueless.indexOf(this.myself) >= 0) {
+                                clueless.splice(clueless.indexOf(this.myself), 1);
                             }
-                        })
-                    } else {
-                        this.players.forEach((player, index) => {
-                            if (
-                                (index <= this.players.length - 1 && index > askerIndex) ||
-                                (index >= this.players.length - 1 && index < whoIndex)
-                            ) {
-                                clueless.push(player)
-                            }
-                        })
+                            ['character', 'weapon', 'place'].forEach(category => {
+                                let key = this.getTableCategoryFor(question[category])[question[category]]
+                                clueless.forEach(player => {
+                                    this.applyOption('x', key[player])
+                                })
+                            })
+                        }
                     }
-                    if(clueless.indexOf(this.myself)>=0){
-                        clueless.splice(clueless.indexOf(this.myself),1);
-                    }
-                    ['character','weapon','place'].forEach(category => {
-                        let key = this.getTableCategoryFor(question[category])[question[category]]
-                        clueless.forEach(player => {
-                            console.log(key,key[player])
-                            this.applyOption('x',key[player])
-                        })
-                    })
-
                 }
             }
         }
@@ -344,5 +354,5 @@
     // 1. nu raspunde nimeni => se pune X la toate inafara de cartile mele
     // 2. eu intreb si cineva raspune si cunosc cartea => se pune bifa si x la restul de pe rand
     // 3. cineva raspunde la o intrebare si nu are 2 din 3 carti => se pune v la a 3-a
-    //
+    // 4. noteazai pelete carti cei care zic pass cu x la toa
 </script>

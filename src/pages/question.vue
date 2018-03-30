@@ -31,7 +31,7 @@
                                 :value="character"
                                 v-for="character in characters"
                         >
-                            {{character}}
+                            {{character}} <span v-if="flatCards.includes(character)">(Yours)</span>
                         </option>
                     </select>
                     <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 mr-3 text-grey-lightest">
@@ -55,7 +55,7 @@
                                 :value="weapon"
                                 v-for="weapon in weapons"
                         >
-                            {{weapon}}
+                            {{weapon}} <span v-if="flatCards.includes(weapon)">(Yours)</span>
                         </option>
                     </select>
                     <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 mr-3 text-grey-lightest">
@@ -79,7 +79,7 @@
                                 :value="place"
                                 v-for="place in places"
                         >
-                            {{place}}
+                            {{place}} <span v-if="flatCards.includes(place)">(Yours)</span>
                         </option>
                     </select>
                     <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 mr-3 text-grey-lightest">
@@ -147,8 +147,12 @@
                 </div>
             </div>
             <div class="w-full">
-                <button class="w-full btn btn-peacock" @click="nextQuestion()">Next</button>
+                <button class="w-full btn btn-peacock"
+                        :disabled="{'disabled': !(question.character && question.place && question.weapon)}"
+                        @click="nextQuestion()">Next</button>
             </div>
+            <hr>
+            {{questions.reverse()}}
         </div>
     </app-layout>
 </template>
